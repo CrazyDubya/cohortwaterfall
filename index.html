@@ -1,502 +1,1578 @@
-<style>
-  #world-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    background: linear-gradient(180deg,
-      #0a0a2e 0%,
-      #0d1b4a 15%,
-      #0f2557 30%,
-      #0a3d62 50%,
-      #073b4c 70%,
-      #042f3d 85%,
-      #021c26 100%);
-    overflow: hidden;
-  }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Creature</title>
+  <style>
+    /* === GLOBAL LAYOUT === */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-  /* Disco ball light source */
-  .bg-disco-ball {
-    position: absolute;
-    top: -50px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 120px;
-    height: 120px;
-    background: radial-gradient(circle at 40% 40%,
-      #ffffff 0%,
-      #e0e0e0 20%,
-      #a0a0a0 50%,
-      #606060 100%);
-    border-radius: 50%;
-    box-shadow:
-      0 0 60px rgba(255, 255, 255, 0.8),
-      0 0 120px rgba(255, 255, 255, 0.4),
-      inset -10px -10px 30px rgba(0, 0, 0, 0.3);
-    animation: bg-disco-rotate 8s linear infinite;
-  }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      overflow: hidden;
+    }
 
-  .bg-disco-ball::before {
-    content: '';
-    position: absolute;
-    top: 10%;
-    left: 10%;
-    width: 80%;
-    height: 80%;
-    background:
-      repeating-linear-gradient(0deg, transparent, transparent 8px, rgba(255,255,255,0.1) 8px, rgba(255,255,255,0.1) 10px),
-      repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(255,255,255,0.1) 8px, rgba(255,255,255,0.1) 10px);
-    border-radius: 50%;
-  }
+    #creature-wrapper {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      z-index: 1;
+    }
 
-  @keyframes bg-disco-rotate {
-    0%, 100% { filter: hue-rotate(0deg); }
-    50% { filter: hue-rotate(360deg); }
-  }
+    /* === BACKGROUND STYLES === */
+    #world-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: linear-gradient(180deg,
+        #0a0a2e 0%,
+        #0d1b4a 15%,
+        #0f2557 30%,
+        #0a3d62 50%,
+        #073b4c 70%,
+        #042f3d 85%,
+        #021c26 100%);
+      overflow: hidden;
+    }
 
-  /* Disco light beams */
-  .bg-light-beams {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    opacity: 0.6;
-  }
+    /* Disco ball light source */
+    .bg-disco-ball {
+      position: absolute;
+      top: -50px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle at 40% 40%,
+        #ffffff 0%,
+        #e0e0e0 20%,
+        #a0a0a0 50%,
+        #606060 100%);
+      border-radius: 50%;
+      box-shadow:
+        0 0 60px rgba(255, 255, 255, 0.8),
+        0 0 120px rgba(255, 255, 255, 0.4),
+        inset -10px -10px 30px rgba(0, 0, 0, 0.3);
+      animation: bg-disco-rotate 8s linear infinite;
+    }
 
-  .bg-beam {
-    position: absolute;
-    top: 0;
-    width: 4px;
-    height: 100%;
-    animation: bg-beam-sweep 4s ease-in-out infinite;
-  }
+    .bg-disco-ball::before {
+      content: '';
+      position: absolute;
+      top: 10%;
+      left: 10%;
+      width: 80%;
+      height: 80%;
+      background:
+        repeating-linear-gradient(0deg, transparent, transparent 8px, rgba(255,255,255,0.1) 8px, rgba(255,255,255,0.1) 10px),
+        repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(255,255,255,0.1) 8px, rgba(255,255,255,0.1) 10px);
+      border-radius: 50%;
+    }
 
-  .bg-beam:nth-child(1) { left: 10%; background: linear-gradient(180deg, #ff00ff, transparent 70%); animation-delay: 0s; }
-  .bg-beam:nth-child(2) { left: 25%; background: linear-gradient(180deg, #00ffff, transparent 60%); animation-delay: 0.5s; }
-  .bg-beam:nth-child(3) { left: 40%; background: linear-gradient(180deg, #ffff00, transparent 65%); animation-delay: 1s; }
-  .bg-beam:nth-child(4) { left: 55%; background: linear-gradient(180deg, #ff0080, transparent 70%); animation-delay: 1.5s; }
-  .bg-beam:nth-child(5) { left: 70%; background: linear-gradient(180deg, #00ff80, transparent 55%); animation-delay: 2s; }
-  .bg-beam:nth-child(6) { left: 85%; background: linear-gradient(180deg, #8000ff, transparent 60%); animation-delay: 2.5s; }
+    @keyframes bg-disco-rotate {
+      0%, 100% { filter: hue-rotate(0deg); }
+      50% { filter: hue-rotate(360deg); }
+    }
 
-  @keyframes bg-beam-sweep {
-    0%, 100% { transform: translateX(-20px) rotate(-5deg); opacity: 0.3; }
-    50% { transform: translateX(20px) rotate(5deg); opacity: 0.8; }
-  }
+    /* Disco light beams */
+    .bg-light-beams {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      opacity: 0.6;
+    }
 
-  /* Disco sparkles */
-  .bg-sparkles {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 60%;
-    pointer-events: none;
-  }
+    .bg-beam {
+      position: absolute;
+      top: 0;
+      width: 4px;
+      height: 100%;
+      animation: bg-beam-sweep 4s ease-in-out infinite;
+    }
 
-  .bg-sparkle {
-    position: absolute;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    animation: bg-sparkle-twinkle 2s ease-in-out infinite;
-  }
+    .bg-beam:nth-child(1) { left: 10%; background: linear-gradient(180deg, #ff00ff, transparent 70%); animation-delay: 0s; }
+    .bg-beam:nth-child(2) { left: 25%; background: linear-gradient(180deg, #00ffff, transparent 60%); animation-delay: 0.5s; }
+    .bg-beam:nth-child(3) { left: 40%; background: linear-gradient(180deg, #ffff00, transparent 65%); animation-delay: 1s; }
+    .bg-beam:nth-child(4) { left: 55%; background: linear-gradient(180deg, #ff0080, transparent 70%); animation-delay: 1.5s; }
+    .bg-beam:nth-child(5) { left: 70%; background: linear-gradient(180deg, #00ff80, transparent 55%); animation-delay: 2s; }
+    .bg-beam:nth-child(6) { left: 85%; background: linear-gradient(180deg, #8000ff, transparent 60%); animation-delay: 2.5s; }
 
-  .bg-sparkle:nth-child(1) { top: 8%; left: 15%; background: #ff00ff; animation-delay: 0s; }
-  .bg-sparkle:nth-child(2) { top: 12%; left: 35%; background: #00ffff; animation-delay: 0.3s; }
-  .bg-sparkle:nth-child(3) { top: 5%; left: 55%; background: #ffff00; animation-delay: 0.6s; }
-  .bg-sparkle:nth-child(4) { top: 18%; left: 75%; background: #ff0080; animation-delay: 0.9s; }
-  .bg-sparkle:nth-child(5) { top: 22%; left: 25%; background: #00ff80; animation-delay: 1.2s; }
-  .bg-sparkle:nth-child(6) { top: 15%; left: 85%; background: #8000ff; animation-delay: 1.5s; }
-  .bg-sparkle:nth-child(7) { top: 28%; left: 45%; background: #ff4040; animation-delay: 0.2s; }
-  .bg-sparkle:nth-child(8) { top: 10%; left: 65%; background: #40ff40; animation-delay: 0.8s; }
-  .bg-sparkle:nth-child(9) { top: 35%; left: 10%; background: #4040ff; animation-delay: 1.1s; }
-  .bg-sparkle:nth-child(10) { top: 30%; left: 90%; background: #ff80ff; animation-delay: 0.4s; }
+    @keyframes bg-beam-sweep {
+      0%, 100% { transform: translateX(-20px) rotate(-5deg); opacity: 0.3; }
+      50% { transform: translateX(20px) rotate(5deg); opacity: 0.8; }
+    }
 
-  @keyframes bg-sparkle-twinkle {
-    0%, 100% { transform: scale(0.5); opacity: 0.3; box-shadow: 0 0 5px currentColor; }
-    50% { transform: scale(1.5); opacity: 1; box-shadow: 0 0 20px currentColor, 0 0 40px currentColor; }
-  }
+    /* Disco sparkles */
+    .bg-sparkles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 60%;
+      pointer-events: none;
+    }
 
-  /* Bubbles container */
-  .bg-bubbles {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-  }
+    .bg-sparkle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      animation: bg-sparkle-twinkle 2s ease-in-out infinite;
+    }
 
-  .bg-bubble {
-    position: absolute;
-    bottom: -100px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%,
-      rgba(255, 255, 255, 0.8),
-      rgba(255, 255, 255, 0.2) 40%,
-      rgba(100, 200, 255, 0.1) 60%,
-      transparent 70%);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    animation: bg-bubble-rise linear infinite;
-  }
+    .bg-sparkle:nth-child(1) { top: 8%; left: 15%; background: #ff00ff; animation-delay: 0s; }
+    .bg-sparkle:nth-child(2) { top: 12%; left: 35%; background: #00ffff; animation-delay: 0.3s; }
+    .bg-sparkle:nth-child(3) { top: 5%; left: 55%; background: #ffff00; animation-delay: 0.6s; }
+    .bg-sparkle:nth-child(4) { top: 18%; left: 75%; background: #ff0080; animation-delay: 0.9s; }
+    .bg-sparkle:nth-child(5) { top: 22%; left: 25%; background: #00ff80; animation-delay: 1.2s; }
+    .bg-sparkle:nth-child(6) { top: 15%; left: 85%; background: #8000ff; animation-delay: 1.5s; }
+    .bg-sparkle:nth-child(7) { top: 28%; left: 45%; background: #ff4040; animation-delay: 0.2s; }
+    .bg-sparkle:nth-child(8) { top: 10%; left: 65%; background: #40ff40; animation-delay: 0.8s; }
+    .bg-sparkle:nth-child(9) { top: 35%; left: 10%; background: #4040ff; animation-delay: 1.1s; }
+    .bg-sparkle:nth-child(10) { top: 30%; left: 90%; background: #ff80ff; animation-delay: 0.4s; }
 
-  .bg-bubble:nth-child(1) { left: 5%; width: 20px; height: 20px; animation-duration: 12s; animation-delay: 0s; }
-  .bg-bubble:nth-child(2) { left: 15%; width: 35px; height: 35px; animation-duration: 15s; animation-delay: 2s; }
-  .bg-bubble:nth-child(3) { left: 25%; width: 15px; height: 15px; animation-duration: 10s; animation-delay: 1s; }
-  .bg-bubble:nth-child(4) { left: 35%; width: 25px; height: 25px; animation-duration: 14s; animation-delay: 3s; }
-  .bg-bubble:nth-child(5) { left: 45%; width: 40px; height: 40px; animation-duration: 18s; animation-delay: 0.5s; }
-  .bg-bubble:nth-child(6) { left: 55%; width: 18px; height: 18px; animation-duration: 11s; animation-delay: 4s; }
-  .bg-bubble:nth-child(7) { left: 65%; width: 30px; height: 30px; animation-duration: 16s; animation-delay: 2.5s; }
-  .bg-bubble:nth-child(8) { left: 75%; width: 22px; height: 22px; animation-duration: 13s; animation-delay: 1.5s; }
-  .bg-bubble:nth-child(9) { left: 85%; width: 28px; height: 28px; animation-duration: 17s; animation-delay: 3.5s; }
-  .bg-bubble:nth-child(10) { left: 95%; width: 16px; height: 16px; animation-duration: 12s; animation-delay: 0.8s; }
-  .bg-bubble:nth-child(11) { left: 10%; width: 12px; height: 12px; animation-duration: 9s; animation-delay: 5s; }
-  .bg-bubble:nth-child(12) { left: 50%; width: 45px; height: 45px; animation-duration: 20s; animation-delay: 6s; }
+    @keyframes bg-sparkle-twinkle {
+      0%, 100% { transform: scale(0.5); opacity: 0.3; box-shadow: 0 0 5px currentColor; }
+      50% { transform: scale(1.5); opacity: 1; box-shadow: 0 0 20px currentColor, 0 0 40px currentColor; }
+    }
 
-  @keyframes bg-bubble-rise {
-    0% { bottom: -100px; transform: translateX(0) scale(1); opacity: 0.7; }
-    25% { transform: translateX(15px) scale(1.05); }
-    50% { transform: translateX(-15px) scale(0.95); }
-    75% { transform: translateX(10px) scale(1.02); }
-    100% { bottom: 110%; transform: translateX(-5px) scale(1); opacity: 0; }
-  }
+    /* Bubbles container */
+    .bg-bubbles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
 
-  /* Neon coral reef */
-  .bg-coral-reef {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 250px;
-  }
+    .bg-bubble {
+      position: absolute;
+      bottom: -100px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%,
+        rgba(255, 255, 255, 0.8),
+        rgba(255, 255, 255, 0.2) 40%,
+        rgba(100, 200, 255, 0.1) 60%,
+        transparent 70%);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      animation: bg-bubble-rise linear infinite;
+    }
 
-  .bg-coral {
-    position: absolute;
-    bottom: 0;
-  }
+    .bg-bubble:nth-child(1) { left: 5%; width: 20px; height: 20px; animation-duration: 12s; animation-delay: 0s; }
+    .bg-bubble:nth-child(2) { left: 15%; width: 35px; height: 35px; animation-duration: 15s; animation-delay: 2s; }
+    .bg-bubble:nth-child(3) { left: 25%; width: 15px; height: 15px; animation-duration: 10s; animation-delay: 1s; }
+    .bg-bubble:nth-child(4) { left: 35%; width: 25px; height: 25px; animation-duration: 14s; animation-delay: 3s; }
+    .bg-bubble:nth-child(5) { left: 45%; width: 40px; height: 40px; animation-duration: 18s; animation-delay: 0.5s; }
+    .bg-bubble:nth-child(6) { left: 55%; width: 18px; height: 18px; animation-duration: 11s; animation-delay: 4s; }
+    .bg-bubble:nth-child(7) { left: 65%; width: 30px; height: 30px; animation-duration: 16s; animation-delay: 2.5s; }
+    .bg-bubble:nth-child(8) { left: 75%; width: 22px; height: 22px; animation-duration: 13s; animation-delay: 1.5s; }
+    .bg-bubble:nth-child(9) { left: 85%; width: 28px; height: 28px; animation-duration: 17s; animation-delay: 3.5s; }
+    .bg-bubble:nth-child(10) { left: 95%; width: 16px; height: 16px; animation-duration: 12s; animation-delay: 0.8s; }
+    .bg-bubble:nth-child(11) { left: 10%; width: 12px; height: 12px; animation-duration: 9s; animation-delay: 5s; }
+    .bg-bubble:nth-child(12) { left: 50%; width: 45px; height: 45px; animation-duration: 20s; animation-delay: 6s; }
 
-  /* Coral type 1 - branching */
-  .bg-coral-1 {
-    left: 5%;
-    width: 80px;
-    height: 120px;
-    background: linear-gradient(0deg, #ff00ff 0%, #ff66ff 100%);
-    clip-path: polygon(40% 100%, 60% 100%, 55% 70%, 70% 60%, 65% 50%, 80% 40%, 70% 35%, 75% 20%, 60% 25%, 50% 0%, 40% 25%, 25% 20%, 30% 35%, 20% 40%, 35% 50%, 30% 60%, 45% 70%);
-    filter: drop-shadow(0 0 15px #ff00ff);
-    animation: bg-coral-glow 3s ease-in-out infinite;
-  }
+    @keyframes bg-bubble-rise {
+      0% { bottom: -100px; transform: translateX(0) scale(1); opacity: 0.7; }
+      25% { transform: translateX(15px) scale(1.05); }
+      50% { transform: translateX(-15px) scale(0.95); }
+      75% { transform: translateX(10px) scale(1.02); }
+      100% { bottom: 110%; transform: translateX(-5px) scale(1); opacity: 0; }
+    }
 
-  .bg-coral-2 {
-    left: 20%;
-    width: 60px;
-    height: 90px;
-    background: linear-gradient(0deg, #00ffff 0%, #66ffff 100%);
-    clip-path: polygon(30% 100%, 70% 100%, 65% 80%, 75% 60%, 60% 50%, 70% 30%, 50% 20%, 55% 0%, 45% 0%, 50% 20%, 30% 30%, 40% 50%, 25% 60%, 35% 80%);
-    filter: drop-shadow(0 0 15px #00ffff);
-    animation: bg-coral-glow 3s ease-in-out infinite 0.5s;
-  }
+    /* Neon coral reef */
+    .bg-coral-reef {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 250px;
+    }
 
-  .bg-coral-3 {
-    left: 35%;
-    width: 100px;
-    height: 80px;
-    background: linear-gradient(0deg, #ffff00 0%, #ffff66 100%);
-    clip-path: polygon(20% 100%, 80% 100%, 85% 80%, 90% 50%, 80% 40%, 85% 20%, 70% 30%, 60% 10%, 50% 25%, 40% 10%, 30% 30%, 15% 20%, 20% 40%, 10% 50%, 15% 80%);
-    filter: drop-shadow(0 0 15px #ffff00);
-    animation: bg-coral-glow 3s ease-in-out infinite 1s;
-  }
+    .bg-coral {
+      position: absolute;
+      bottom: 0;
+    }
 
-  .bg-coral-4 {
-    left: 55%;
-    width: 70px;
-    height: 140px;
-    background: linear-gradient(0deg, #ff0080 0%, #ff66b2 100%);
-    clip-path: polygon(35% 100%, 65% 100%, 60% 85%, 70% 70%, 65% 55%, 75% 40%, 60% 35%, 65% 20%, 55% 15%, 50% 0%, 45% 15%, 35% 20%, 40% 35%, 25% 40%, 35% 55%, 30% 70%, 40% 85%);
-    filter: drop-shadow(0 0 15px #ff0080);
-    animation: bg-coral-glow 3s ease-in-out infinite 1.5s;
-  }
+    /* Coral type 1 - branching */
+    .bg-coral-1 {
+      left: 5%;
+      width: 80px;
+      height: 120px;
+      background: linear-gradient(0deg, #ff00ff 0%, #ff66ff 100%);
+      clip-path: polygon(40% 100%, 60% 100%, 55% 70%, 70% 60%, 65% 50%, 80% 40%, 70% 35%, 75% 20%, 60% 25%, 50% 0%, 40% 25%, 25% 20%, 30% 35%, 20% 40%, 35% 50%, 30% 60%, 45% 70%);
+      filter: drop-shadow(0 0 15px #ff00ff);
+      animation: bg-coral-glow 3s ease-in-out infinite;
+    }
 
-  .bg-coral-5 {
-    left: 72%;
-    width: 90px;
-    height: 100px;
-    background: linear-gradient(0deg, #00ff80 0%, #66ffb2 100%);
-    clip-path: polygon(25% 100%, 75% 100%, 80% 75%, 90% 55%, 75% 45%, 85% 25%, 65% 20%, 70% 5%, 50% 15%, 30% 5%, 35% 20%, 15% 25%, 25% 45%, 10% 55%, 20% 75%);
-    filter: drop-shadow(0 0 15px #00ff80);
-    animation: bg-coral-glow 3s ease-in-out infinite 2s;
-  }
+    .bg-coral-2 {
+      left: 20%;
+      width: 60px;
+      height: 90px;
+      background: linear-gradient(0deg, #00ffff 0%, #66ffff 100%);
+      clip-path: polygon(30% 100%, 70% 100%, 65% 80%, 75% 60%, 60% 50%, 70% 30%, 50% 20%, 55% 0%, 45% 0%, 50% 20%, 30% 30%, 40% 50%, 25% 60%, 35% 80%);
+      filter: drop-shadow(0 0 15px #00ffff);
+      animation: bg-coral-glow 3s ease-in-out infinite 0.5s;
+    }
 
-  .bg-coral-6 {
-    left: 88%;
-    width: 65px;
-    height: 110px;
-    background: linear-gradient(0deg, #8000ff 0%, #b366ff 100%);
-    clip-path: polygon(40% 100%, 60% 100%, 55% 75%, 70% 55%, 60% 45%, 75% 25%, 55% 20%, 50% 0%, 45% 20%, 25% 25%, 40% 45%, 30% 55%, 45% 75%);
-    filter: drop-shadow(0 0 15px #8000ff);
-    animation: bg-coral-glow 3s ease-in-out infinite 2.5s;
-  }
+    .bg-coral-3 {
+      left: 35%;
+      width: 100px;
+      height: 80px;
+      background: linear-gradient(0deg, #ffff00 0%, #ffff66 100%);
+      clip-path: polygon(20% 100%, 80% 100%, 85% 80%, 90% 50%, 80% 40%, 85% 20%, 70% 30%, 60% 10%, 50% 25%, 40% 10%, 30% 30%, 15% 20%, 20% 40%, 10% 50%, 15% 80%);
+      filter: drop-shadow(0 0 15px #ffff00);
+      animation: bg-coral-glow 3s ease-in-out infinite 1s;
+    }
 
-  /* Sea anemone style corals */
-  .bg-anemone {
-    position: absolute;
-    bottom: 0;
-    border-radius: 50% 50% 0 0;
-  }
+    .bg-coral-4 {
+      left: 55%;
+      width: 70px;
+      height: 140px;
+      background: linear-gradient(0deg, #ff0080 0%, #ff66b2 100%);
+      clip-path: polygon(35% 100%, 65% 100%, 60% 85%, 70% 70%, 65% 55%, 75% 40%, 60% 35%, 65% 20%, 55% 15%, 50% 0%, 45% 15%, 35% 20%, 40% 35%, 25% 40%, 35% 55%, 30% 70%, 40% 85%);
+      filter: drop-shadow(0 0 15px #ff0080);
+      animation: bg-coral-glow 3s ease-in-out infinite 1.5s;
+    }
 
-  .bg-anemone-1 {
-    left: 12%;
-    width: 50px;
-    height: 60px;
-    background: radial-gradient(ellipse at bottom, #ff4080 0%, transparent 70%);
-    box-shadow:
-      -15px -20px 0 -10px #ff4080,
-      15px -20px 0 -10px #ff4080,
-      -25px -10px 0 -10px #ff4080,
-      25px -10px 0 -10px #ff4080,
-      0px -30px 0 -10px #ff4080,
-      -10px -35px 0 -12px #ff4080,
-      10px -35px 0 -12px #ff4080;
-    filter: drop-shadow(0 0 10px #ff4080);
-    animation: bg-anemone-sway 4s ease-in-out infinite;
-  }
+    .bg-coral-5 {
+      left: 72%;
+      width: 90px;
+      height: 100px;
+      background: linear-gradient(0deg, #00ff80 0%, #66ffb2 100%);
+      clip-path: polygon(25% 100%, 75% 100%, 80% 75%, 90% 55%, 75% 45%, 85% 25%, 65% 20%, 70% 5%, 50% 15%, 30% 5%, 35% 20%, 15% 25%, 25% 45%, 10% 55%, 20% 75%);
+      filter: drop-shadow(0 0 15px #00ff80);
+      animation: bg-coral-glow 3s ease-in-out infinite 2s;
+    }
 
-  .bg-anemone-2 {
-    left: 45%;
-    width: 40px;
-    height: 50px;
-    background: radial-gradient(ellipse at bottom, #40ffff 0%, transparent 70%);
-    box-shadow:
-      -12px -15px 0 -8px #40ffff,
-      12px -15px 0 -8px #40ffff,
-      -20px -8px 0 -8px #40ffff,
-      20px -8px 0 -8px #40ffff,
-      0px -25px 0 -8px #40ffff;
-    filter: drop-shadow(0 0 10px #40ffff);
-    animation: bg-anemone-sway 4s ease-in-out infinite 1s;
-  }
+    .bg-coral-6 {
+      left: 88%;
+      width: 65px;
+      height: 110px;
+      background: linear-gradient(0deg, #8000ff 0%, #b366ff 100%);
+      clip-path: polygon(40% 100%, 60% 100%, 55% 75%, 70% 55%, 60% 45%, 75% 25%, 55% 20%, 50% 0%, 45% 20%, 25% 25%, 40% 45%, 30% 55%, 45% 75%);
+      filter: drop-shadow(0 0 15px #8000ff);
+      animation: bg-coral-glow 3s ease-in-out infinite 2.5s;
+    }
 
-  .bg-anemone-3 {
-    left: 80%;
-    width: 45px;
-    height: 55px;
-    background: radial-gradient(ellipse at bottom, #ffff40 0%, transparent 70%);
-    box-shadow:
-      -14px -18px 0 -9px #ffff40,
-      14px -18px 0 -9px #ffff40,
-      -22px -9px 0 -9px #ffff40,
-      22px -9px 0 -9px #ffff40,
-      0px -28px 0 -9px #ffff40;
-    filter: drop-shadow(0 0 10px #ffff40);
-    animation: bg-anemone-sway 4s ease-in-out infinite 2s;
-  }
+    /* Sea anemone style corals */
+    .bg-anemone {
+      position: absolute;
+      bottom: 0;
+      border-radius: 50% 50% 0 0;
+    }
 
-  @keyframes bg-coral-glow {
-    0%, 100% { filter: drop-shadow(0 0 15px currentColor) brightness(1); }
-    50% { filter: drop-shadow(0 0 30px currentColor) brightness(1.3); }
-  }
+    .bg-anemone-1 {
+      left: 12%;
+      width: 50px;
+      height: 60px;
+      background: radial-gradient(ellipse at bottom, #ff4080 0%, transparent 70%);
+      box-shadow:
+        -15px -20px 0 -10px #ff4080,
+        15px -20px 0 -10px #ff4080,
+        -25px -10px 0 -10px #ff4080,
+        25px -10px 0 -10px #ff4080,
+        0px -30px 0 -10px #ff4080,
+        -10px -35px 0 -12px #ff4080,
+        10px -35px 0 -12px #ff4080;
+      filter: drop-shadow(0 0 10px #ff4080);
+      animation: bg-anemone-sway 4s ease-in-out infinite;
+    }
 
-  @keyframes bg-anemone-sway {
-    0%, 100% { transform: skewX(-3deg); }
-    50% { transform: skewX(3deg); }
-  }
+    .bg-anemone-2 {
+      left: 45%;
+      width: 40px;
+      height: 50px;
+      background: radial-gradient(ellipse at bottom, #40ffff 0%, transparent 70%);
+      box-shadow:
+        -12px -15px 0 -8px #40ffff,
+        12px -15px 0 -8px #40ffff,
+        -20px -8px 0 -8px #40ffff,
+        20px -8px 0 -8px #40ffff,
+        0px -25px 0 -8px #40ffff;
+      filter: drop-shadow(0 0 10px #40ffff);
+      animation: bg-anemone-sway 4s ease-in-out infinite 1s;
+    }
 
-  /* Sandy ocean floor */
-  .bg-ocean-floor {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 40px;
-    background: linear-gradient(0deg,
-      #1a3a4a 0%,
-      #0d2a3a 50%,
-      transparent 100%);
-    border-radius: 100% 100% 0 0 / 20px 20px 0 0;
-  }
+    .bg-anemone-3 {
+      left: 80%;
+      width: 45px;
+      height: 55px;
+      background: radial-gradient(ellipse at bottom, #ffff40 0%, transparent 70%);
+      box-shadow:
+        -14px -18px 0 -9px #ffff40,
+        14px -18px 0 -9px #ffff40,
+        -22px -9px 0 -9px #ffff40,
+        22px -9px 0 -9px #ffff40,
+        0px -28px 0 -9px #ffff40;
+      filter: drop-shadow(0 0 10px #ffff40);
+      animation: bg-anemone-sway 4s ease-in-out infinite 2s;
+    }
 
-  .bg-ocean-floor::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 20px;
-    background: repeating-linear-gradient(90deg,
-      transparent 0px,
-      rgba(255, 255, 255, 0.03) 2px,
-      transparent 4px,
-      transparent 20px
-    );
-  }
+    @keyframes bg-coral-glow {
+      0%, 100% { filter: drop-shadow(0 0 15px currentColor) brightness(1); }
+      50% { filter: drop-shadow(0 0 30px currentColor) brightness(1.3); }
+    }
 
-  /* Floating particles / plankton */
-  .bg-particles {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-  }
+    @keyframes bg-anemone-sway {
+      0%, 100% { transform: skewX(-3deg); }
+      50% { transform: skewX(3deg); }
+    }
 
-  .bg-particle {
-    position: absolute;
-    width: 3px;
-    height: 3px;
-    background: rgba(255, 255, 255, 0.4);
-    border-radius: 50%;
-    animation: bg-particle-float 20s linear infinite;
-  }
+    /* Sandy ocean floor */
+    .bg-ocean-floor {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 40px;
+      background: linear-gradient(0deg,
+        #1a3a4a 0%,
+        #0d2a3a 50%,
+        transparent 100%);
+      border-radius: 100% 100% 0 0 / 20px 20px 0 0;
+    }
 
-  .bg-particle:nth-child(1) { left: 8%; top: 20%; animation-delay: 0s; animation-duration: 25s; }
-  .bg-particle:nth-child(2) { left: 18%; top: 40%; animation-delay: 3s; animation-duration: 22s; }
-  .bg-particle:nth-child(3) { left: 28%; top: 60%; animation-delay: 6s; animation-duration: 28s; }
-  .bg-particle:nth-child(4) { left: 38%; top: 30%; animation-delay: 9s; animation-duration: 24s; }
-  .bg-particle:nth-child(5) { left: 48%; top: 50%; animation-delay: 2s; animation-duration: 26s; }
-  .bg-particle:nth-child(6) { left: 58%; top: 70%; animation-delay: 5s; animation-duration: 23s; }
-  .bg-particle:nth-child(7) { left: 68%; top: 25%; animation-delay: 8s; animation-duration: 27s; }
-  .bg-particle:nth-child(8) { left: 78%; top: 45%; animation-delay: 1s; animation-duration: 21s; }
-  .bg-particle:nth-child(9) { left: 88%; top: 65%; animation-delay: 4s; animation-duration: 29s; }
-  .bg-particle:nth-child(10) { left: 98%; top: 35%; animation-delay: 7s; animation-duration: 20s; }
+    .bg-ocean-floor::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 20px;
+      background: repeating-linear-gradient(90deg,
+        transparent 0px,
+        rgba(255, 255, 255, 0.03) 2px,
+        transparent 4px,
+        transparent 20px
+      );
+    }
 
-  @keyframes bg-particle-float {
-    0% { transform: translate(0, 0) scale(1); opacity: 0.4; }
-    25% { transform: translate(-30px, -50px) scale(1.2); opacity: 0.6; }
-    50% { transform: translate(20px, -100px) scale(0.8); opacity: 0.3; }
-    75% { transform: translate(-20px, -150px) scale(1.1); opacity: 0.5; }
-    100% { transform: translate(0, -200px) scale(1); opacity: 0.4; }
-  }
+    /* Floating particles / plankton */
+    .bg-particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
 
-  /* Light rays from surface */
-  .bg-light-rays {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background:
-      linear-gradient(175deg, rgba(255,255,255,0.1) 0%, transparent 40%),
-      linear-gradient(170deg, rgba(100,200,255,0.05) 0%, transparent 50%),
-      linear-gradient(165deg, rgba(255,255,255,0.08) 0%, transparent 35%);
-    pointer-events: none;
-    animation: bg-rays-shimmer 8s ease-in-out infinite;
-  }
+    .bg-particle {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.4);
+      border-radius: 50%;
+      animation: bg-particle-float 20s linear infinite;
+    }
 
-  @keyframes bg-rays-shimmer {
-    0%, 100% { opacity: 0.6; }
-    50% { opacity: 1; }
-  }
+    .bg-particle:nth-child(1) { left: 8%; top: 20%; animation-delay: 0s; animation-duration: 25s; }
+    .bg-particle:nth-child(2) { left: 18%; top: 40%; animation-delay: 3s; animation-duration: 22s; }
+    .bg-particle:nth-child(3) { left: 28%; top: 60%; animation-delay: 6s; animation-duration: 28s; }
+    .bg-particle:nth-child(4) { left: 38%; top: 30%; animation-delay: 9s; animation-duration: 24s; }
+    .bg-particle:nth-child(5) { left: 48%; top: 50%; animation-delay: 2s; animation-duration: 26s; }
+    .bg-particle:nth-child(6) { left: 58%; top: 70%; animation-delay: 5s; animation-duration: 23s; }
+    .bg-particle:nth-child(7) { left: 68%; top: 25%; animation-delay: 8s; animation-duration: 27s; }
+    .bg-particle:nth-child(8) { left: 78%; top: 45%; animation-delay: 1s; animation-duration: 21s; }
+    .bg-particle:nth-child(9) { left: 88%; top: 65%; animation-delay: 4s; animation-duration: 29s; }
+    .bg-particle:nth-child(10) { left: 98%; top: 35%; animation-delay: 7s; animation-duration: 20s; }
 
-  /* Seaweed */
-  .bg-seaweed {
-    position: absolute;
-    bottom: 20px;
-    width: 15px;
-    background: linear-gradient(0deg, #006644, #00aa66);
-    border-radius: 50% 50% 0 0;
-    transform-origin: bottom center;
-    animation: bg-seaweed-sway 5s ease-in-out infinite;
-  }
+    @keyframes bg-particle-float {
+      0% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+      25% { transform: translate(-30px, -50px) scale(1.2); opacity: 0.6; }
+      50% { transform: translate(20px, -100px) scale(0.8); opacity: 0.3; }
+      75% { transform: translate(-20px, -150px) scale(1.1); opacity: 0.5; }
+      100% { transform: translate(0, -200px) scale(1); opacity: 0.4; }
+    }
 
-  .bg-seaweed-1 { left: 3%; height: 80px; animation-delay: 0s; }
-  .bg-seaweed-2 { left: 6%; height: 100px; animation-delay: 0.5s; }
-  .bg-seaweed-3 { left: 30%; height: 70px; animation-delay: 1s; }
-  .bg-seaweed-4 { left: 62%; height: 90px; animation-delay: 1.5s; }
-  .bg-seaweed-5 { left: 92%; height: 85px; animation-delay: 2s; }
-  .bg-seaweed-6 { left: 95%; height: 110px; animation-delay: 2.5s; }
+    /* Light rays from surface */
+    .bg-light-rays {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background:
+        linear-gradient(175deg, rgba(255,255,255,0.1) 0%, transparent 40%),
+        linear-gradient(170deg, rgba(100,200,255,0.05) 0%, transparent 50%),
+        linear-gradient(165deg, rgba(255,255,255,0.08) 0%, transparent 35%);
+      pointer-events: none;
+      animation: bg-rays-shimmer 8s ease-in-out infinite;
+    }
 
-  @keyframes bg-seaweed-sway {
-    0%, 100% { transform: rotate(-5deg); }
-    50% { transform: rotate(5deg); }
-  }
-</style>
+    @keyframes bg-rays-shimmer {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
 
-<div id="world-bg">
-  <!-- Disco ball at top -->
-  <div class="bg-disco-ball"></div>
+    /* Seaweed */
+    .bg-seaweed {
+      position: absolute;
+      bottom: 20px;
+      width: 15px;
+      background: linear-gradient(0deg, #006644, #00aa66);
+      border-radius: 50% 50% 0 0;
+      transform-origin: bottom center;
+      animation: bg-seaweed-sway 5s ease-in-out infinite;
+    }
 
-  <!-- Light beams from disco ball -->
-  <div class="bg-light-beams">
-    <div class="bg-beam"></div>
-    <div class="bg-beam"></div>
-    <div class="bg-beam"></div>
-    <div class="bg-beam"></div>
-    <div class="bg-beam"></div>
-    <div class="bg-beam"></div>
+    .bg-seaweed-1 { left: 3%; height: 80px; animation-delay: 0s; }
+    .bg-seaweed-2 { left: 6%; height: 100px; animation-delay: 0.5s; }
+    .bg-seaweed-3 { left: 30%; height: 70px; animation-delay: 1s; }
+    .bg-seaweed-4 { left: 62%; height: 90px; animation-delay: 1.5s; }
+    .bg-seaweed-5 { left: 92%; height: 85px; animation-delay: 2s; }
+    .bg-seaweed-6 { left: 95%; height: 110px; animation-delay: 2.5s; }
+
+    @keyframes bg-seaweed-sway {
+      0%, 100% { transform: rotate(-5deg); }
+      50% { transform: rotate(5deg); }
+    }
+
+    /* === HEAD STYLES === */
+    #part-head {
+      width: 300px;
+      height: 200px;
+      margin: 0 auto;
+      position: relative;
+      background: transparent;
+    }
+
+    /* Base skull shape - metallic chrome */
+    .head-skull {
+      position: absolute;
+      width: 140px;
+      height: 160px;
+      left: 80px;
+      top: 20px;
+      background: linear-gradient(135deg, #2a2a3a 0%, #4a4a5a 25%, #6a6a7a 50%, #3a3a4a 75%, #1a1a2a 100%);
+      border-radius: 70px 70px 50px 50px;
+      box-shadow:
+        inset -5px -5px 15px rgba(0, 0, 0, 0.5),
+        inset 5px 5px 15px rgba(150, 150, 170, 0.3),
+        0 0 20px rgba(0, 255, 255, 0.1);
+    }
+
+    /* Cybernetic plate - left side */
+    .head-cyber-plate {
+      position: absolute;
+      width: 60px;
+      height: 80px;
+      left: 60px;
+      top: 40px;
+      background: linear-gradient(180deg, #1a1a2a 0%, #2d2d4a 50%, #1a1a2a 100%);
+      border-radius: 30px 10px 20px 40px;
+      border: 2px solid #00ffff;
+      box-shadow:
+        0 0 10px rgba(0, 255, 255, 0.5),
+        inset 0 0 15px rgba(0, 255, 255, 0.2);
+    }
+
+    /* Circuit lines on cyber plate */
+    .head-circuit-1 {
+      position: absolute;
+      width: 30px;
+      height: 2px;
+      left: 65px;
+      top: 55px;
+      background: #00ffff;
+      box-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff;
+    }
+
+    .head-circuit-2 {
+      position: absolute;
+      width: 2px;
+      height: 25px;
+      left: 75px;
+      top: 55px;
+      background: #00ffff;
+      box-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff;
+    }
+
+    .head-circuit-3 {
+      position: absolute;
+      width: 15px;
+      height: 2px;
+      left: 75px;
+      top: 78px;
+      background: #ff00ff;
+      box-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff;
+    }
+
+    /* Node points */
+    .head-node-1 {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      left: 70px;
+      top: 85px;
+      background: #00ffff;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #00ffff, 0 0 15px #00ffff;
+      animation: head-pulse 1.5s ease-in-out infinite;
+    }
+
+    .head-node-2 {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      left: 88px;
+      top: 100px;
+      background: #ff00ff;
+      border-radius: 50%;
+      box-shadow: 0 0 6px #ff00ff, 0 0 12px #ff00ff;
+      animation: head-pulse 2s ease-in-out infinite 0.5s;
+    }
+
+    /* Neon visor */
+    .head-visor {
+      position: absolute;
+      width: 160px;
+      height: 25px;
+      left: 70px;
+      top: 65px;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(255, 0, 128, 0.8) 10%,
+        rgba(255, 0, 255, 0.9) 30%,
+        rgba(0, 255, 255, 0.9) 70%,
+        rgba(0, 200, 255, 0.8) 90%,
+        transparent 100%);
+      border-radius: 5px;
+      clip-path: polygon(5% 0%, 95% 0%, 100% 50%, 95% 100%, 5% 100%, 0% 50%);
+      box-shadow:
+        0 0 20px rgba(255, 0, 255, 0.7),
+        0 0 40px rgba(0, 255, 255, 0.5),
+        0 0 60px rgba(255, 0, 255, 0.3);
+      animation: head-visor-glow 3s ease-in-out infinite;
+    }
+
+    /* Visor reflection line */
+    .head-visor-shine {
+      position: absolute;
+      width: 100px;
+      height: 3px;
+      left: 100px;
+      top: 70px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+      border-radius: 2px;
+    }
+
+    /* Nose/breathing apparatus */
+    .head-nose {
+      position: absolute;
+      width: 20px;
+      height: 30px;
+      left: 140px;
+      top: 95px;
+      background: linear-gradient(180deg, #3a3a4a 0%, #2a2a3a 100%);
+      clip-path: polygon(30% 0%, 70% 0%, 100% 100%, 0% 100%);
+    }
+
+    /* Breathing vents */
+    .head-vent-1, .head-vent-2, .head-vent-3 {
+      position: absolute;
+      width: 12px;
+      height: 2px;
+      left: 144px;
+      background: #1a1a2a;
+      box-shadow: inset 0 0 3px rgba(0, 255, 255, 0.3);
+    }
+    .head-vent-1 { top: 105px; }
+    .head-vent-2 { top: 110px; }
+    .head-vent-3 { top: 115px; }
+
+    /* Mouth piece - mechanical */
+    .head-mouth {
+      position: absolute;
+      width: 60px;
+      height: 20px;
+      left: 120px;
+      top: 130px;
+      background: linear-gradient(180deg, #2a2a3a 0%, #1a1a2a 100%);
+      border-radius: 5px 5px 15px 15px;
+      border: 1px solid #4a4a5a;
+    }
+
+    /* Mouth grille lines */
+    .head-grille {
+      position: absolute;
+      width: 50px;
+      height: 12px;
+      left: 125px;
+      top: 134px;
+      background: repeating-linear-gradient(
+        90deg,
+        #0a0a1a 0px,
+        #0a0a1a 3px,
+        #2a2a3a 3px,
+        #2a2a3a 6px
+      );
+      border-radius: 2px;
+    }
+
+    /* Right side implant */
+    .head-implant-right {
+      position: absolute;
+      width: 40px;
+      height: 50px;
+      left: 200px;
+      top: 50px;
+      background: linear-gradient(90deg, #3a3a4a 0%, #2a2a3a 100%);
+      border-radius: 5px 20px 20px 5px;
+      border: 1px solid #5a5a6a;
+    }
+
+    /* Antenna/sensor */
+    .head-antenna {
+      position: absolute;
+      width: 4px;
+      height: 35px;
+      left: 225px;
+      top: 25px;
+      background: linear-gradient(180deg, #00ffff 0%, #4a4a5a 30%, #3a3a4a 100%);
+      border-radius: 2px;
+      box-shadow: 0 -5px 15px rgba(0, 255, 255, 0.8);
+    }
+
+    .head-antenna-tip {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      left: 223px;
+      top: 18px;
+      background: #00ffff;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff;
+      animation: head-pulse 1s ease-in-out infinite;
+    }
+
+    /* Ear piece */
+    .head-ear {
+      position: absolute;
+      width: 15px;
+      height: 40px;
+      left: 215px;
+      top: 65px;
+      background: linear-gradient(90deg, #4a4a5a 0%, #2a2a3a 100%);
+      border-radius: 0 10px 10px 0;
+    }
+
+    /* Jaw line accent */
+    .head-jaw-line {
+      position: absolute;
+      width: 80px;
+      height: 3px;
+      left: 110px;
+      top: 155px;
+      background: linear-gradient(90deg, transparent, #ff00ff, #00ffff, transparent);
+      border-radius: 2px;
+      box-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+    }
+
+    /* Forehead markings */
+    .head-forehead-line {
+      position: absolute;
+      width: 60px;
+      height: 2px;
+      left: 120px;
+      top: 40px;
+      background: linear-gradient(90deg, transparent, #6a6a7a, transparent);
+    }
+
+    /* Hair/top cables */
+    .head-cable-1 {
+      position: absolute;
+      width: 8px;
+      height: 30px;
+      left: 100px;
+      top: 5px;
+      background: linear-gradient(180deg, #1a1a2a 0%, #2a2a3a 100%);
+      border-radius: 4px;
+      transform: rotate(-15deg);
+    }
+
+    .head-cable-2 {
+      position: absolute;
+      width: 8px;
+      height: 35px;
+      left: 120px;
+      top: 0px;
+      background: linear-gradient(180deg, #1a1a2a 0%, #2a2a3a 100%);
+      border-radius: 4px;
+      transform: rotate(-5deg);
+    }
+
+    .head-cable-3 {
+      position: absolute;
+      width: 8px;
+      height: 32px;
+      left: 140px;
+      top: 2px;
+      background: linear-gradient(180deg, #1a1a2a 0%, #2a2a3a 100%);
+      border-radius: 4px;
+      transform: rotate(5deg);
+    }
+
+    .head-cable-4 {
+      position: absolute;
+      width: 8px;
+      height: 28px;
+      left: 160px;
+      top: 8px;
+      background: linear-gradient(180deg, #1a1a2a 0%, #2a2a3a 100%);
+      border-radius: 4px;
+      transform: rotate(12deg);
+    }
+
+    /* Neck connection */
+    .head-neck {
+      position: absolute;
+      width: 70px;
+      height: 30px;
+      left: 115px;
+      top: 170px;
+      background: linear-gradient(180deg, #2a2a3a 0%, #1a1a2a 100%);
+      border-radius: 0 0 20px 20px;
+      border-left: 2px solid #3a3a4a;
+      border-right: 2px solid #3a3a4a;
+    }
+
+    /* Neck rings */
+    .head-neck-ring {
+      position: absolute;
+      width: 60px;
+      height: 4px;
+      left: 120px;
+      top: 175px;
+      background: linear-gradient(90deg, #4a4a5a, #6a6a7a, #4a4a5a);
+      border-radius: 2px;
+    }
+
+    /* Animations */
+    @keyframes head-pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(0.9); }
+    }
+
+    @keyframes head-visor-glow {
+      0%, 100% {
+        box-shadow:
+          0 0 20px rgba(255, 0, 255, 0.7),
+          0 0 40px rgba(0, 255, 255, 0.5),
+          0 0 60px rgba(255, 0, 255, 0.3);
+      }
+      50% {
+        box-shadow:
+          0 0 30px rgba(255, 0, 255, 0.9),
+          0 0 50px rgba(0, 255, 255, 0.7),
+          0 0 80px rgba(255, 0, 255, 0.5);
+      }
+    }
+
+    /* === TORSO STYLES === */
+    #part-torso {
+      width: 300px;
+      height: 250px;
+      margin: 0 auto;
+      position: relative;
+      background: transparent;
+    }
+
+    /* Chainmail base layer */
+    .torso-chainmail {
+      position: absolute;
+      width: 180px;
+      height: 60px;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      background:
+        radial-gradient(circle at 3px 3px, #5a5a5a 2px, transparent 2px),
+        radial-gradient(circle at 9px 6px, #4a4a4a 2px, transparent 2px);
+      background-size: 12px 9px;
+      background-color: #3a3a3a;
+      border-radius: 0 0 20px 20px;
+      z-index: 1;
+    }
+
+    /* Main chest plate */
+    .torso-chestplate {
+      position: absolute;
+      width: 200px;
+      height: 180px;
+      top: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(145deg, #a8a8a8 0%, #787878 25%, #606060 50%, #707070 75%, #888888 100%);
+      border-radius: 30px 30px 60px 60px;
+      box-shadow:
+        inset 5px 5px 15px rgba(255,255,255,0.3),
+        inset -5px -5px 15px rgba(0,0,0,0.4),
+        3px 5px 10px rgba(0,0,0,0.5);
+      z-index: 2;
+      border: 3px solid #4a4a4a;
+    }
+
+    /* Center ridge */
+    .torso-ridge {
+      position: absolute;
+      width: 8px;
+      height: 140px;
+      top: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(90deg, #5a5a5a 0%, #909090 50%, #5a5a5a 100%);
+      border-radius: 4px;
+      z-index: 3;
+    }
+
+    /* Left pauldron */
+    .torso-pauldron-left {
+      position: absolute;
+      width: 80px;
+      height: 70px;
+      top: 30px;
+      left: 15px;
+      background: linear-gradient(160deg, #9a9a9a 0%, #686868 50%, #787878 100%);
+      border-radius: 50% 50% 30% 30%;
+      box-shadow:
+        inset 3px 3px 10px rgba(255,255,255,0.3),
+        inset -3px -3px 10px rgba(0,0,0,0.3),
+        2px 3px 8px rgba(0,0,0,0.4);
+      z-index: 4;
+      border: 2px solid #4a4a4a;
+    }
+
+    /* Right pauldron */
+    .torso-pauldron-right {
+      position: absolute;
+      width: 80px;
+      height: 70px;
+      top: 30px;
+      right: 15px;
+      background: linear-gradient(200deg, #9a9a9a 0%, #686868 50%, #787878 100%);
+      border-radius: 50% 50% 30% 30%;
+      box-shadow:
+        inset 3px 3px 10px rgba(255,255,255,0.3),
+        inset -3px -3px 10px rgba(0,0,0,0.3),
+        2px 3px 8px rgba(0,0,0,0.4);
+      z-index: 4;
+      border: 2px solid #4a4a4a;
+    }
+
+    /* Pauldron plates */
+    .torso-pauldron-plate-left {
+      position: absolute;
+      width: 70px;
+      height: 20px;
+      top: 85px;
+      left: 20px;
+      background: linear-gradient(180deg, #858585 0%, #656565 100%);
+      border-radius: 0 0 35px 35px;
+      border: 2px solid #4a4a4a;
+      z-index: 3;
+    }
+
+    .torso-pauldron-plate-right {
+      position: absolute;
+      width: 70px;
+      height: 20px;
+      top: 85px;
+      right: 20px;
+      background: linear-gradient(180deg, #858585 0%, #656565 100%);
+      border-radius: 0 0 35px 35px;
+      border: 2px solid #4a4a4a;
+      z-index: 3;
+    }
+
+    /* Neck guard */
+    .torso-neck-guard {
+      position: absolute;
+      width: 100px;
+      height: 40px;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg, #7a7a7a 0%, #5a5a5a 100%);
+      border-radius: 20px 20px 0 0;
+      border: 2px solid #4a4a4a;
+      z-index: 1;
+    }
+
+    /* Crest shield */
+    .torso-crest {
+      position: absolute;
+      width: 50px;
+      height: 60px;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg, #8B0000 0%, #5a0000 100%);
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      z-index: 5;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    /* Crest lion/emblem */
+    .torso-crest-emblem {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      top: 92px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 6;
+    }
+
+    .torso-crest-emblem::before {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 25px;
+      background: #d4af37;
+      clip-path: polygon(50% 0%, 80% 20%, 100% 50%, 80% 100%, 20% 100%, 0% 50%, 20% 20%);
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .torso-crest-emblem::after {
+      content: '';
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #d4af37;
+      border-radius: 50%;
+      top: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    /* Rivets */
+    .torso-rivet {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: radial-gradient(circle at 30% 30%, #b0b0b0 0%, #606060 60%, #404040 100%);
+      border-radius: 50%;
+      z-index: 6;
+      box-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    }
+
+    .torso-rivet-1 { top: 65px; left: 65px; }
+    .torso-rivet-2 { top: 65px; right: 65px; }
+    .torso-rivet-3 { top: 120px; left: 60px; }
+    .torso-rivet-4 { top: 120px; right: 60px; }
+    .torso-rivet-5 { top: 170px; left: 70px; }
+    .torso-rivet-6 { top: 170px; right: 70px; }
+    .torso-rivet-7 { top: 200px; left: 100px; }
+    .torso-rivet-8 { top: 200px; right: 100px; }
+
+    /* Pauldron rivets */
+    .torso-rivet-p1 { top: 50px; left: 35px; }
+    .torso-rivet-p2 { top: 50px; left: 70px; }
+    .torso-rivet-p3 { top: 50px; right: 35px; }
+    .torso-rivet-p4 { top: 50px; right: 70px; }
+
+    /* Belt/waist plate */
+    .torso-belt {
+      position: absolute;
+      width: 160px;
+      height: 25px;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg, #6a5a3a 0%, #4a3a2a 50%, #5a4a3a 100%);
+      border-radius: 5px;
+      z-index: 3;
+      border: 2px solid #3a2a1a;
+    }
+
+    /* Belt buckle */
+    .torso-buckle {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      bottom: 17px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(145deg, #d4af37 0%, #aa8a27 50%, #c4a037 100%);
+      border-radius: 5px;
+      z-index: 4;
+      border: 2px solid #8a6a17;
+      box-shadow: inset 0 0 5px rgba(255,255,255,0.3);
+    }
+
+    .torso-buckle::after {
+      content: '';
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #8a6a17;
+      border-radius: 2px;
+    }
+
+    /* Chest plate detail lines */
+    .torso-plate-line {
+      position: absolute;
+      height: 2px;
+      background: linear-gradient(90deg, transparent 0%, #555 20%, #555 80%, transparent 100%);
+      z-index: 3;
+    }
+
+    .torso-plate-line-1 {
+      width: 140px;
+      top: 150px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .torso-plate-line-2 {
+      width: 120px;
+      top: 180px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    /* === LEGS STYLES === */
+    #part-legs {
+      width: 300px;
+      height: 250px;
+      margin: 0 auto;
+      position: relative;
+      background: transparent;
+      overflow: visible;
+    }
+
+    /* Base hip/connection point */
+    .legs-hip {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 40px;
+      background: linear-gradient(180deg, #2d1f3d 0%, #4a2c5a 50%, #3d2847 100%);
+      border-radius: 60px 60px 40px 40px;
+      box-shadow:
+        inset 0 -10px 20px rgba(138, 43, 226, 0.3),
+        0 5px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    .legs-hip::before {
+      content: '';
+      position: absolute;
+      top: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 15px;
+      background: linear-gradient(90deg, transparent, rgba(57, 255, 20, 0.2), transparent);
+      border-radius: 50%;
+    }
+
+    /* Tentacle legs */
+    .legs-tentacle {
+      position: absolute;
+      width: 35px;
+      background: linear-gradient(90deg, #3d2847 0%, #5a3d6a 40%, #4a2c5a 70%, #3d2847 100%);
+      border-radius: 20px;
+      transform-origin: top center;
+    }
+
+    .legs-tentacle-1 {
+      top: 30px;
+      left: 30px;
+      height: 180px;
+      transform: rotate(-25deg);
+      animation: legs-sway1 3s ease-in-out infinite;
+    }
+
+    .legs-tentacle-2 {
+      top: 35px;
+      left: 80px;
+      height: 200px;
+      width: 40px;
+      transform: rotate(-8deg);
+      animation: legs-sway2 3.5s ease-in-out infinite;
+    }
+
+    .legs-tentacle-3 {
+      top: 35px;
+      right: 80px;
+      height: 200px;
+      width: 40px;
+      transform: rotate(8deg);
+      animation: legs-sway2 3.5s ease-in-out infinite reverse;
+    }
+
+    .legs-tentacle-4 {
+      top: 30px;
+      right: 30px;
+      height: 180px;
+      transform: rotate(25deg);
+      animation: legs-sway1 3s ease-in-out infinite reverse;
+    }
+
+    @keyframes legs-sway1 {
+      0%, 100% { transform: rotate(-25deg); }
+      50% { transform: rotate(-20deg); }
+    }
+
+    @keyframes legs-sway2 {
+      0%, 100% { transform: rotate(-8deg); }
+      50% { transform: rotate(-5deg); }
+    }
+
+    /* Suckers on tentacles */
+    .legs-sucker {
+      position: absolute;
+      width: 18px;
+      height: 10px;
+      background: radial-gradient(ellipse at center, #1a0f20 30%, #6b3a7d 60%, #5a3d6a 100%);
+      border-radius: 50%;
+      left: 50%;
+      transform: translateX(-50%);
+      box-shadow: inset 0 2px 4px rgba(57, 255, 20, 0.3);
+    }
+
+    .legs-sucker::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 8px;
+      height: 4px;
+      background: radial-gradient(ellipse, #39ff14 0%, #2d8f0f 100%);
+      border-radius: 50%;
+      opacity: 0.7;
+    }
+
+    .legs-sucker-1 { top: 30px; }
+    .legs-sucker-2 { top: 60px; }
+    .legs-sucker-3 { top: 90px; }
+    .legs-sucker-4 { top: 120px; }
+    .legs-sucker-5 { top: 150px; }
+
+    /* Slime drips */
+    .legs-slime {
+      position: absolute;
+      width: 8px;
+      background: linear-gradient(180deg, rgba(57, 255, 20, 0.8) 0%, rgba(57, 255, 20, 0.4) 50%, rgba(57, 255, 20, 0) 100%);
+      border-radius: 4px 4px 50% 50%;
+      animation: legs-drip 2s ease-in infinite;
+    }
+
+    .legs-slime-1 {
+      bottom: 30px;
+      left: 25px;
+      height: 40px;
+      animation-delay: 0s;
+    }
+
+    .legs-slime-2 {
+      bottom: 20px;
+      left: 95px;
+      height: 50px;
+      animation-delay: 0.7s;
+    }
+
+    .legs-slime-3 {
+      bottom: 20px;
+      right: 95px;
+      height: 45px;
+      animation-delay: 1.4s;
+    }
+
+    .legs-slime-4 {
+      bottom: 30px;
+      right: 25px;
+      height: 35px;
+      animation-delay: 0.3s;
+    }
+
+    @keyframes legs-drip {
+      0% { transform: scaleY(0.3); opacity: 0; }
+      50% { transform: scaleY(1); opacity: 1; }
+      100% { transform: scaleY(1.2) translateY(20px); opacity: 0; }
+    }
+
+    /* Slime puddle at bottom */
+    .legs-puddle {
+      position: absolute;
+      bottom: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 25px;
+      background: radial-gradient(ellipse at center, rgba(57, 255, 20, 0.5) 0%, rgba(138, 43, 226, 0.3) 50%, transparent 70%);
+      border-radius: 50%;
+      animation: legs-pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes legs-pulse {
+      0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.7; }
+      50% { transform: translateX(-50%) scale(1.1); opacity: 1; }
+    }
+
+    /* Goo veins on tentacles */
+    .legs-vein {
+      position: absolute;
+      width: 3px;
+      height: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg,
+        transparent 0%,
+        rgba(57, 255, 20, 0.4) 20%,
+        rgba(138, 43, 226, 0.5) 50%,
+        rgba(57, 255, 20, 0.4) 80%,
+        transparent 100%);
+      border-radius: 2px;
+      animation: legs-vein-pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes legs-vein-pulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    /* Bioluminescent spots */
+    .legs-glow {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: radial-gradient(circle, #39ff14 0%, rgba(57, 255, 20, 0) 70%);
+      border-radius: 50%;
+      animation: legs-blink 2s ease-in-out infinite;
+    }
+
+    .legs-glow-1 { top: 45px; left: 15px; animation-delay: 0s; }
+    .legs-glow-2 { top: 80px; left: 60px; animation-delay: 0.5s; }
+    .legs-glow-3 { top: 100px; right: 60px; animation-delay: 1s; }
+    .legs-glow-4 { top: 130px; right: 15px; animation-delay: 1.5s; }
+    .legs-glow-5 { top: 70px; left: 130px; animation-delay: 0.3s; }
+    .legs-glow-6 { top: 110px; right: 130px; animation-delay: 0.8s; }
+
+    @keyframes legs-blink {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.5); }
+    }
+
+    /* Tentacle tips */
+    .legs-tip {
+      position: absolute;
+      bottom: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 25px;
+      height: 20px;
+      background: radial-gradient(ellipse at top, #5a3d6a 0%, #3d2847 100%);
+      border-radius: 50% 50% 60% 60%;
+      box-shadow: 0 5px 10px rgba(57, 255, 20, 0.3);
+    }
+
+    .legs-tip::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 12px;
+      height: 8px;
+      background: radial-gradient(ellipse, #39ff14 0%, #2d8f0f 100%);
+      border-radius: 50%;
+      opacity: 0.8;
+    }
+
+    /* Extra small tentacle appendages */
+    .legs-small-tentacle {
+      position: absolute;
+      width: 12px;
+      height: 60px;
+      background: linear-gradient(90deg, #3d2847 0%, #5a3d6a 50%, #3d2847 100%);
+      border-radius: 10px;
+      transform-origin: top center;
+    }
+
+    .legs-small-1 {
+      top: 25px;
+      left: 55px;
+      transform: rotate(-40deg);
+      animation: legs-wiggle 1.5s ease-in-out infinite;
+    }
+
+    .legs-small-2 {
+      top: 25px;
+      right: 55px;
+      transform: rotate(40deg);
+      animation: legs-wiggle 1.5s ease-in-out infinite reverse;
+    }
+
+    @keyframes legs-wiggle {
+      0%, 100% { transform: rotate(-40deg); }
+      50% { transform: rotate(-35deg); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Background Environment -->
+  <div id="world-bg">
+    <!-- Disco ball at top -->
+    <div class="bg-disco-ball"></div>
+
+    <!-- Light beams from disco ball -->
+    <div class="bg-light-beams">
+      <div class="bg-beam"></div>
+      <div class="bg-beam"></div>
+      <div class="bg-beam"></div>
+      <div class="bg-beam"></div>
+      <div class="bg-beam"></div>
+      <div class="bg-beam"></div>
+    </div>
+
+    <!-- Sparkles -->
+    <div class="bg-sparkles">
+      <div class="bg-sparkle"></div>
+      <div class="bg-sparkle"></div>
+      <div class="bg-sparkle"></div>
+      <div class="bg-sparkle"></div>
+      <div class="bg-sparkle"></div>
+      <div class="bg-sparkle"></div>
+      <div class="bg-sparkle"></div>
+      <div class="bg-sparkle"></div>
+      <div class="bg-sparkle"></div>
+      <div class="bg-sparkle"></div>
+    </div>
+
+    <!-- Light rays from surface -->
+    <div class="bg-light-rays"></div>
+
+    <!-- Floating particles -->
+    <div class="bg-particles">
+      <div class="bg-particle"></div>
+      <div class="bg-particle"></div>
+      <div class="bg-particle"></div>
+      <div class="bg-particle"></div>
+      <div class="bg-particle"></div>
+      <div class="bg-particle"></div>
+      <div class="bg-particle"></div>
+      <div class="bg-particle"></div>
+      <div class="bg-particle"></div>
+      <div class="bg-particle"></div>
+    </div>
+
+    <!-- Rising bubbles -->
+    <div class="bg-bubbles">
+      <div class="bg-bubble"></div>
+      <div class="bg-bubble"></div>
+      <div class="bg-bubble"></div>
+      <div class="bg-bubble"></div>
+      <div class="bg-bubble"></div>
+      <div class="bg-bubble"></div>
+      <div class="bg-bubble"></div>
+      <div class="bg-bubble"></div>
+      <div class="bg-bubble"></div>
+      <div class="bg-bubble"></div>
+      <div class="bg-bubble"></div>
+      <div class="bg-bubble"></div>
+    </div>
+
+    <!-- Seaweed -->
+    <div class="bg-seaweed bg-seaweed-1"></div>
+    <div class="bg-seaweed bg-seaweed-2"></div>
+    <div class="bg-seaweed bg-seaweed-3"></div>
+    <div class="bg-seaweed bg-seaweed-4"></div>
+    <div class="bg-seaweed bg-seaweed-5"></div>
+    <div class="bg-seaweed bg-seaweed-6"></div>
+
+    <!-- Neon coral reef -->
+    <div class="bg-coral-reef">
+      <div class="bg-coral bg-coral-1"></div>
+      <div class="bg-coral bg-coral-2"></div>
+      <div class="bg-coral bg-coral-3"></div>
+      <div class="bg-coral bg-coral-4"></div>
+      <div class="bg-coral bg-coral-5"></div>
+      <div class="bg-coral bg-coral-6"></div>
+      <div class="bg-anemone bg-anemone-1"></div>
+      <div class="bg-anemone bg-anemone-2"></div>
+      <div class="bg-anemone bg-anemone-3"></div>
+    </div>
+
+    <!-- Ocean floor -->
+    <div class="bg-ocean-floor"></div>
   </div>
 
-  <!-- Sparkles -->
-  <div class="bg-sparkles">
-    <div class="bg-sparkle"></div>
-    <div class="bg-sparkle"></div>
-    <div class="bg-sparkle"></div>
-    <div class="bg-sparkle"></div>
-    <div class="bg-sparkle"></div>
-    <div class="bg-sparkle"></div>
-    <div class="bg-sparkle"></div>
-    <div class="bg-sparkle"></div>
-    <div class="bg-sparkle"></div>
-    <div class="bg-sparkle"></div>
+  <!-- Creature Wrapper - Centered and Stacked -->
+  <div id="creature-wrapper">
+    <!-- Head (Top) -->
+    <div id="part-head">
+      <!-- Cables/hair -->
+      <div class="head-cable-1"></div>
+      <div class="head-cable-2"></div>
+      <div class="head-cable-3"></div>
+      <div class="head-cable-4"></div>
+
+      <!-- Main skull -->
+      <div class="head-skull"></div>
+
+      <!-- Cybernetic plate (left) -->
+      <div class="head-cyber-plate"></div>
+      <div class="head-circuit-1"></div>
+      <div class="head-circuit-2"></div>
+      <div class="head-circuit-3"></div>
+      <div class="head-node-1"></div>
+      <div class="head-node-2"></div>
+
+      <!-- Right side implants -->
+      <div class="head-implant-right"></div>
+      <div class="head-antenna"></div>
+      <div class="head-antenna-tip"></div>
+      <div class="head-ear"></div>
+
+      <!-- Forehead -->
+      <div class="head-forehead-line"></div>
+
+      <!-- Visor/eyes -->
+      <div class="head-visor"></div>
+      <div class="head-visor-shine"></div>
+
+      <!-- Nose apparatus -->
+      <div class="head-nose"></div>
+      <div class="head-vent-1"></div>
+      <div class="head-vent-2"></div>
+      <div class="head-vent-3"></div>
+
+      <!-- Mouth -->
+      <div class="head-mouth"></div>
+      <div class="head-grille"></div>
+
+      <!-- Jaw accent -->
+      <div class="head-jaw-line"></div>
+
+      <!-- Neck -->
+      <div class="head-neck"></div>
+      <div class="head-neck-ring"></div>
+    </div>
+
+    <!-- Torso (Middle) -->
+    <div id="part-torso">
+      <div class="torso-chainmail"></div>
+      <div class="torso-neck-guard"></div>
+      <div class="torso-chestplate"></div>
+      <div class="torso-ridge"></div>
+      <div class="torso-pauldron-left"></div>
+      <div class="torso-pauldron-right"></div>
+      <div class="torso-pauldron-plate-left"></div>
+      <div class="torso-pauldron-plate-right"></div>
+      <div class="torso-crest"></div>
+      <div class="torso-crest-emblem"></div>
+      <div class="torso-rivet torso-rivet-1"></div>
+      <div class="torso-rivet torso-rivet-2"></div>
+      <div class="torso-rivet torso-rivet-3"></div>
+      <div class="torso-rivet torso-rivet-4"></div>
+      <div class="torso-rivet torso-rivet-5"></div>
+      <div class="torso-rivet torso-rivet-6"></div>
+      <div class="torso-rivet torso-rivet-7"></div>
+      <div class="torso-rivet torso-rivet-8"></div>
+      <div class="torso-rivet torso-rivet-p1"></div>
+      <div class="torso-rivet torso-rivet-p2"></div>
+      <div class="torso-rivet torso-rivet-p3"></div>
+      <div class="torso-rivet torso-rivet-p4"></div>
+      <div class="torso-belt"></div>
+      <div class="torso-buckle"></div>
+      <div class="torso-plate-line torso-plate-line-1"></div>
+      <div class="torso-plate-line torso-plate-line-2"></div>
+    </div>
+
+    <!-- Legs (Bottom) -->
+    <div id="part-legs">
+      <!-- Hip connection -->
+      <div class="legs-hip"></div>
+
+      <!-- Main tentacle legs -->
+      <div class="legs-tentacle legs-tentacle-1">
+        <div class="legs-vein"></div>
+        <div class="legs-sucker legs-sucker-1"></div>
+        <div class="legs-sucker legs-sucker-2"></div>
+        <div class="legs-sucker legs-sucker-3"></div>
+        <div class="legs-sucker legs-sucker-4"></div>
+        <div class="legs-tip"></div>
+      </div>
+
+      <div class="legs-tentacle legs-tentacle-2">
+        <div class="legs-vein"></div>
+        <div class="legs-sucker legs-sucker-1"></div>
+        <div class="legs-sucker legs-sucker-2"></div>
+        <div class="legs-sucker legs-sucker-3"></div>
+        <div class="legs-sucker legs-sucker-4"></div>
+        <div class="legs-sucker legs-sucker-5"></div>
+        <div class="legs-tip"></div>
+      </div>
+
+      <div class="legs-tentacle legs-tentacle-3">
+        <div class="legs-vein"></div>
+        <div class="legs-sucker legs-sucker-1"></div>
+        <div class="legs-sucker legs-sucker-2"></div>
+        <div class="legs-sucker legs-sucker-3"></div>
+        <div class="legs-sucker legs-sucker-4"></div>
+        <div class="legs-sucker legs-sucker-5"></div>
+        <div class="legs-tip"></div>
+      </div>
+
+      <div class="legs-tentacle legs-tentacle-4">
+        <div class="legs-vein"></div>
+        <div class="legs-sucker legs-sucker-1"></div>
+        <div class="legs-sucker legs-sucker-2"></div>
+        <div class="legs-sucker legs-sucker-3"></div>
+        <div class="legs-sucker legs-sucker-4"></div>
+        <div class="legs-tip"></div>
+      </div>
+
+      <!-- Small appendage tentacles -->
+      <div class="legs-small-tentacle legs-small-1"></div>
+      <div class="legs-small-tentacle legs-small-2"></div>
+
+      <!-- Slime drips -->
+      <div class="legs-slime legs-slime-1"></div>
+      <div class="legs-slime legs-slime-2"></div>
+      <div class="legs-slime legs-slime-3"></div>
+      <div class="legs-slime legs-slime-4"></div>
+
+      <!-- Slime puddle -->
+      <div class="legs-puddle"></div>
+
+      <!-- Bioluminescent glow spots -->
+      <div class="legs-glow legs-glow-1"></div>
+      <div class="legs-glow legs-glow-2"></div>
+      <div class="legs-glow legs-glow-3"></div>
+      <div class="legs-glow legs-glow-4"></div>
+      <div class="legs-glow legs-glow-5"></div>
+      <div class="legs-glow legs-glow-6"></div>
+    </div>
   </div>
-
-  <!-- Light rays from surface -->
-  <div class="bg-light-rays"></div>
-
-  <!-- Floating particles -->
-  <div class="bg-particles">
-    <div class="bg-particle"></div>
-    <div class="bg-particle"></div>
-    <div class="bg-particle"></div>
-    <div class="bg-particle"></div>
-    <div class="bg-particle"></div>
-    <div class="bg-particle"></div>
-    <div class="bg-particle"></div>
-    <div class="bg-particle"></div>
-    <div class="bg-particle"></div>
-    <div class="bg-particle"></div>
-  </div>
-
-  <!-- Rising bubbles -->
-  <div class="bg-bubbles">
-    <div class="bg-bubble"></div>
-    <div class="bg-bubble"></div>
-    <div class="bg-bubble"></div>
-    <div class="bg-bubble"></div>
-    <div class="bg-bubble"></div>
-    <div class="bg-bubble"></div>
-    <div class="bg-bubble"></div>
-    <div class="bg-bubble"></div>
-    <div class="bg-bubble"></div>
-    <div class="bg-bubble"></div>
-    <div class="bg-bubble"></div>
-    <div class="bg-bubble"></div>
-  </div>
-
-  <!-- Seaweed -->
-  <div class="bg-seaweed bg-seaweed-1"></div>
-  <div class="bg-seaweed bg-seaweed-2"></div>
-  <div class="bg-seaweed bg-seaweed-3"></div>
-  <div class="bg-seaweed bg-seaweed-4"></div>
-  <div class="bg-seaweed bg-seaweed-5"></div>
-  <div class="bg-seaweed bg-seaweed-6"></div>
-
-  <!-- Neon coral reef -->
-  <div class="bg-coral-reef">
-    <div class="bg-coral bg-coral-1"></div>
-    <div class="bg-coral bg-coral-2"></div>
-    <div class="bg-coral bg-coral-3"></div>
-    <div class="bg-coral bg-coral-4"></div>
-    <div class="bg-coral bg-coral-5"></div>
-    <div class="bg-coral bg-coral-6"></div>
-    <div class="bg-anemone bg-anemone-1"></div>
-    <div class="bg-anemone bg-anemone-2"></div>
-    <div class="bg-anemone bg-anemone-3"></div>
-  </div>
-
-  <!-- Ocean floor -->
-  <div class="bg-ocean-floor"></div>
-</div>
+</body>
+</html>

@@ -1,0 +1,390 @@
+<style>
+  #part-head {
+    width: 300px;
+    height: 200px;
+    margin: 0 auto;
+    position: relative;
+    background: transparent;
+  }
+
+  /* Base skull shape - metallic chrome */
+  .head-skull {
+    position: absolute;
+    width: 140px;
+    height: 160px;
+    left: 80px;
+    top: 20px;
+    background: linear-gradient(135deg, #2a2a3a 0%, #4a4a5a 25%, #6a6a7a 50%, #3a3a4a 75%, #1a1a2a 100%);
+    border-radius: 70px 70px 50px 50px;
+    box-shadow:
+      inset -5px -5px 15px rgba(0, 0, 0, 0.5),
+      inset 5px 5px 15px rgba(150, 150, 170, 0.3),
+      0 0 20px rgba(0, 255, 255, 0.1);
+  }
+
+  /* Cybernetic plate - left side */
+  .head-cyber-plate {
+    position: absolute;
+    width: 60px;
+    height: 80px;
+    left: 60px;
+    top: 40px;
+    background: linear-gradient(180deg, #1a1a2a 0%, #2d2d4a 50%, #1a1a2a 100%);
+    border-radius: 30px 10px 20px 40px;
+    border: 2px solid #00ffff;
+    box-shadow:
+      0 0 10px rgba(0, 255, 255, 0.5),
+      inset 0 0 15px rgba(0, 255, 255, 0.2);
+  }
+
+  /* Circuit lines on cyber plate */
+  .head-circuit-1 {
+    position: absolute;
+    width: 30px;
+    height: 2px;
+    left: 65px;
+    top: 55px;
+    background: #00ffff;
+    box-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff;
+  }
+
+  .head-circuit-2 {
+    position: absolute;
+    width: 2px;
+    height: 25px;
+    left: 75px;
+    top: 55px;
+    background: #00ffff;
+    box-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff;
+  }
+
+  .head-circuit-3 {
+    position: absolute;
+    width: 15px;
+    height: 2px;
+    left: 75px;
+    top: 78px;
+    background: #ff00ff;
+    box-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff;
+  }
+
+  /* Node points */
+  .head-node-1 {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    left: 70px;
+    top: 85px;
+    background: #00ffff;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #00ffff, 0 0 15px #00ffff;
+    animation: head-pulse 1.5s ease-in-out infinite;
+  }
+
+  .head-node-2 {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    left: 88px;
+    top: 100px;
+    background: #ff00ff;
+    border-radius: 50%;
+    box-shadow: 0 0 6px #ff00ff, 0 0 12px #ff00ff;
+    animation: head-pulse 2s ease-in-out infinite 0.5s;
+  }
+
+  /* Neon visor */
+  .head-visor {
+    position: absolute;
+    width: 160px;
+    height: 25px;
+    left: 70px;
+    top: 65px;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(255, 0, 128, 0.8) 10%,
+      rgba(255, 0, 255, 0.9) 30%,
+      rgba(0, 255, 255, 0.9) 70%,
+      rgba(0, 200, 255, 0.8) 90%,
+      transparent 100%);
+    border-radius: 5px;
+    clip-path: polygon(5% 0%, 95% 0%, 100% 50%, 95% 100%, 5% 100%, 0% 50%);
+    box-shadow:
+      0 0 20px rgba(255, 0, 255, 0.7),
+      0 0 40px rgba(0, 255, 255, 0.5),
+      0 0 60px rgba(255, 0, 255, 0.3);
+    animation: head-visor-glow 3s ease-in-out infinite;
+  }
+
+  /* Visor reflection line */
+  .head-visor-shine {
+    position: absolute;
+    width: 100px;
+    height: 3px;
+    left: 100px;
+    top: 70px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+    border-radius: 2px;
+  }
+
+  /* Nose/breathing apparatus */
+  .head-nose {
+    position: absolute;
+    width: 20px;
+    height: 30px;
+    left: 140px;
+    top: 95px;
+    background: linear-gradient(180deg, #3a3a4a 0%, #2a2a3a 100%);
+    clip-path: polygon(30% 0%, 70% 0%, 100% 100%, 0% 100%);
+  }
+
+  /* Breathing vents */
+  .head-vent-1, .head-vent-2, .head-vent-3 {
+    position: absolute;
+    width: 12px;
+    height: 2px;
+    left: 144px;
+    background: #1a1a2a;
+    box-shadow: inset 0 0 3px rgba(0, 255, 255, 0.3);
+  }
+  .head-vent-1 { top: 105px; }
+  .head-vent-2 { top: 110px; }
+  .head-vent-3 { top: 115px; }
+
+  /* Mouth piece - mechanical */
+  .head-mouth {
+    position: absolute;
+    width: 60px;
+    height: 20px;
+    left: 120px;
+    top: 130px;
+    background: linear-gradient(180deg, #2a2a3a 0%, #1a1a2a 100%);
+    border-radius: 5px 5px 15px 15px;
+    border: 1px solid #4a4a5a;
+  }
+
+  /* Mouth grille lines */
+  .head-grille {
+    position: absolute;
+    width: 50px;
+    height: 12px;
+    left: 125px;
+    top: 134px;
+    background: repeating-linear-gradient(
+      90deg,
+      #0a0a1a 0px,
+      #0a0a1a 3px,
+      #2a2a3a 3px,
+      #2a2a3a 6px
+    );
+    border-radius: 2px;
+  }
+
+  /* Right side implant */
+  .head-implant-right {
+    position: absolute;
+    width: 40px;
+    height: 50px;
+    left: 200px;
+    top: 50px;
+    background: linear-gradient(90deg, #3a3a4a 0%, #2a2a3a 100%);
+    border-radius: 5px 20px 20px 5px;
+    border: 1px solid #5a5a6a;
+  }
+
+  /* Antenna/sensor */
+  .head-antenna {
+    position: absolute;
+    width: 4px;
+    height: 35px;
+    left: 225px;
+    top: 25px;
+    background: linear-gradient(180deg, #00ffff 0%, #4a4a5a 30%, #3a3a4a 100%);
+    border-radius: 2px;
+    box-shadow: 0 -5px 15px rgba(0, 255, 255, 0.8);
+  }
+
+  .head-antenna-tip {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    left: 223px;
+    top: 18px;
+    background: #00ffff;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff;
+    animation: head-pulse 1s ease-in-out infinite;
+  }
+
+  /* Ear piece */
+  .head-ear {
+    position: absolute;
+    width: 15px;
+    height: 40px;
+    left: 215px;
+    top: 65px;
+    background: linear-gradient(90deg, #4a4a5a 0%, #2a2a3a 100%);
+    border-radius: 0 10px 10px 0;
+  }
+
+  /* Jaw line accent */
+  .head-jaw-line {
+    position: absolute;
+    width: 80px;
+    height: 3px;
+    left: 110px;
+    top: 155px;
+    background: linear-gradient(90deg, transparent, #ff00ff, #00ffff, transparent);
+    border-radius: 2px;
+    box-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+  }
+
+  /* Forehead markings */
+  .head-forehead-line {
+    position: absolute;
+    width: 60px;
+    height: 2px;
+    left: 120px;
+    top: 40px;
+    background: linear-gradient(90deg, transparent, #6a6a7a, transparent);
+  }
+
+  /* Hair/top cables */
+  .head-cable-1 {
+    position: absolute;
+    width: 8px;
+    height: 30px;
+    left: 100px;
+    top: 5px;
+    background: linear-gradient(180deg, #1a1a2a 0%, #2a2a3a 100%);
+    border-radius: 4px;
+    transform: rotate(-15deg);
+  }
+
+  .head-cable-2 {
+    position: absolute;
+    width: 8px;
+    height: 35px;
+    left: 120px;
+    top: 0px;
+    background: linear-gradient(180deg, #1a1a2a 0%, #2a2a3a 100%);
+    border-radius: 4px;
+    transform: rotate(-5deg);
+  }
+
+  .head-cable-3 {
+    position: absolute;
+    width: 8px;
+    height: 32px;
+    left: 140px;
+    top: 2px;
+    background: linear-gradient(180deg, #1a1a2a 0%, #2a2a3a 100%);
+    border-radius: 4px;
+    transform: rotate(5deg);
+  }
+
+  .head-cable-4 {
+    position: absolute;
+    width: 8px;
+    height: 28px;
+    left: 160px;
+    top: 8px;
+    background: linear-gradient(180deg, #1a1a2a 0%, #2a2a3a 100%);
+    border-radius: 4px;
+    transform: rotate(12deg);
+  }
+
+  /* Neck connection */
+  .head-neck {
+    position: absolute;
+    width: 70px;
+    height: 30px;
+    left: 115px;
+    top: 170px;
+    background: linear-gradient(180deg, #2a2a3a 0%, #1a1a2a 100%);
+    border-radius: 0 0 20px 20px;
+    border-left: 2px solid #3a3a4a;
+    border-right: 2px solid #3a3a4a;
+  }
+
+  /* Neck rings */
+  .head-neck-ring {
+    position: absolute;
+    width: 60px;
+    height: 4px;
+    left: 120px;
+    top: 175px;
+    background: linear-gradient(90deg, #4a4a5a, #6a6a7a, #4a4a5a);
+    border-radius: 2px;
+  }
+
+  /* Animations */
+  @keyframes head-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.9); }
+  }
+
+  @keyframes head-visor-glow {
+    0%, 100% {
+      box-shadow:
+        0 0 20px rgba(255, 0, 255, 0.7),
+        0 0 40px rgba(0, 255, 255, 0.5),
+        0 0 60px rgba(255, 0, 255, 0.3);
+    }
+    50% {
+      box-shadow:
+        0 0 30px rgba(255, 0, 255, 0.9),
+        0 0 50px rgba(0, 255, 255, 0.7),
+        0 0 80px rgba(255, 0, 255, 0.5);
+    }
+  }
+</style>
+
+<div id="part-head">
+  <!-- Cables/hair -->
+  <div class="head-cable-1"></div>
+  <div class="head-cable-2"></div>
+  <div class="head-cable-3"></div>
+  <div class="head-cable-4"></div>
+
+  <!-- Main skull -->
+  <div class="head-skull"></div>
+
+  <!-- Cybernetic plate (left) -->
+  <div class="head-cyber-plate"></div>
+  <div class="head-circuit-1"></div>
+  <div class="head-circuit-2"></div>
+  <div class="head-circuit-3"></div>
+  <div class="head-node-1"></div>
+  <div class="head-node-2"></div>
+
+  <!-- Right side implants -->
+  <div class="head-implant-right"></div>
+  <div class="head-antenna"></div>
+  <div class="head-antenna-tip"></div>
+  <div class="head-ear"></div>
+
+  <!-- Forehead -->
+  <div class="head-forehead-line"></div>
+
+  <!-- Visor/eyes -->
+  <div class="head-visor"></div>
+  <div class="head-visor-shine"></div>
+
+  <!-- Nose apparatus -->
+  <div class="head-nose"></div>
+  <div class="head-vent-1"></div>
+  <div class="head-vent-2"></div>
+  <div class="head-vent-3"></div>
+
+  <!-- Mouth -->
+  <div class="head-mouth"></div>
+  <div class="head-grille"></div>
+
+  <!-- Jaw accent -->
+  <div class="head-jaw-line"></div>
+
+  <!-- Neck -->
+  <div class="head-neck"></div>
+  <div class="head-neck-ring"></div>
+</div>

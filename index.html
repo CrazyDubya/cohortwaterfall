@@ -1336,6 +1336,48 @@
       0%, 100% { transform: rotate(-40deg); }
       50% { transform: rotate(-35deg); }
     }
+
+    /* === CREATURE ANIMATION STYLES === */
+
+    /* Head bobbing animation - floating/looking around */
+    @keyframes creature-head-bob {
+      0%, 100% { transform: translateY(0); }
+      25% { transform: translateY(-8px); }
+      50% { transform: translateY(-3px); }
+      75% { transform: translateY(-10px); }
+    }
+
+    #part-head {
+      animation: creature-head-bob 4s ease-in-out infinite;
+    }
+
+    /* Torso breathing animation - subtle scale */
+    @keyframes creature-torso-breathe {
+      0%, 100% { transform: scaleX(1) scaleY(1); }
+      50% { transform: scaleX(1.015) scaleY(1.02); }
+    }
+
+    #part-torso {
+      animation: creature-torso-breathe 3s ease-in-out infinite;
+      transform-origin: center center;
+    }
+
+    /* Legs hover/drift animation - out of sync with head */
+    @keyframes creature-legs-drift {
+      0%, 100% { transform: translateY(0) translateX(0); }
+      33% { transform: translateY(-5px) translateX(3px); }
+      66% { transform: translateY(-2px) translateX(-3px); }
+    }
+
+    #part-legs {
+      animation: creature-legs-drift 5s ease-in-out infinite;
+    }
+
+    /* Creature wrapper transition for smooth hue changes on click */
+    #creature-wrapper {
+      transition: filter 0.3s ease-out;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -1574,5 +1616,20 @@
       <div class="legs-glow legs-glow-6"></div>
     </div>
   </div>
+
+  <!-- Creature Interaction Script -->
+  <script>
+    (function() {
+      const creatureWrapper = document.getElementById('creature-wrapper');
+
+      creatureWrapper.addEventListener('click', function(event) {
+        // Generate random hue rotation value (0 to 360 degrees)
+        const randomHue = Math.floor(Math.random() * 361);
+
+        // Apply hue-rotate filter to the entire creature
+        this.style.filter = 'hue-rotate(' + randomHue + 'deg)';
+      });
+    })();
+  </script>
 </body>
 </html>

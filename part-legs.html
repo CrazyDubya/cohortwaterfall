@@ -1,0 +1,346 @@
+<style>
+  #part-legs {
+    width: 300px;
+    height: 250px;
+    margin: 0 auto;
+    position: relative;
+    background: transparent;
+    overflow: visible;
+  }
+
+  /* Base hip/connection point */
+  .legs-hip {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 40px;
+    background: linear-gradient(180deg, #2d1f3d 0%, #4a2c5a 50%, #3d2847 100%);
+    border-radius: 60px 60px 40px 40px;
+    box-shadow:
+      inset 0 -10px 20px rgba(138, 43, 226, 0.3),
+      0 5px 15px rgba(0, 0, 0, 0.5);
+  }
+
+  .legs-hip::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 15px;
+    background: linear-gradient(90deg, transparent, rgba(57, 255, 20, 0.2), transparent);
+    border-radius: 50%;
+  }
+
+  /* Tentacle legs */
+  .legs-tentacle {
+    position: absolute;
+    width: 35px;
+    background: linear-gradient(90deg, #3d2847 0%, #5a3d6a 40%, #4a2c5a 70%, #3d2847 100%);
+    border-radius: 20px;
+    transform-origin: top center;
+  }
+
+  .legs-tentacle-1 {
+    top: 30px;
+    left: 30px;
+    height: 180px;
+    transform: rotate(-25deg);
+    animation: legs-sway1 3s ease-in-out infinite;
+  }
+
+  .legs-tentacle-2 {
+    top: 35px;
+    left: 80px;
+    height: 200px;
+    width: 40px;
+    transform: rotate(-8deg);
+    animation: legs-sway2 3.5s ease-in-out infinite;
+  }
+
+  .legs-tentacle-3 {
+    top: 35px;
+    right: 80px;
+    height: 200px;
+    width: 40px;
+    transform: rotate(8deg);
+    animation: legs-sway2 3.5s ease-in-out infinite reverse;
+  }
+
+  .legs-tentacle-4 {
+    top: 30px;
+    right: 30px;
+    height: 180px;
+    transform: rotate(25deg);
+    animation: legs-sway1 3s ease-in-out infinite reverse;
+  }
+
+  @keyframes legs-sway1 {
+    0%, 100% { transform: rotate(-25deg); }
+    50% { transform: rotate(-20deg); }
+  }
+
+  @keyframes legs-sway2 {
+    0%, 100% { transform: rotate(-8deg); }
+    50% { transform: rotate(-5deg); }
+  }
+
+  /* Suckers on tentacles */
+  .legs-sucker {
+    position: absolute;
+    width: 18px;
+    height: 10px;
+    background: radial-gradient(ellipse at center, #1a0f20 30%, #6b3a7d 60%, #5a3d6a 100%);
+    border-radius: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: inset 0 2px 4px rgba(57, 255, 20, 0.3);
+  }
+
+  .legs-sucker::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 4px;
+    background: radial-gradient(ellipse, #39ff14 0%, #2d8f0f 100%);
+    border-radius: 50%;
+    opacity: 0.7;
+  }
+
+  .legs-sucker-1 { top: 30px; }
+  .legs-sucker-2 { top: 60px; }
+  .legs-sucker-3 { top: 90px; }
+  .legs-sucker-4 { top: 120px; }
+  .legs-sucker-5 { top: 150px; }
+
+  /* Slime drips */
+  .legs-slime {
+    position: absolute;
+    width: 8px;
+    background: linear-gradient(180deg, rgba(57, 255, 20, 0.8) 0%, rgba(57, 255, 20, 0.4) 50%, rgba(57, 255, 20, 0) 100%);
+    border-radius: 4px 4px 50% 50%;
+    animation: legs-drip 2s ease-in infinite;
+  }
+
+  .legs-slime-1 {
+    bottom: 30px;
+    left: 25px;
+    height: 40px;
+    animation-delay: 0s;
+  }
+
+  .legs-slime-2 {
+    bottom: 20px;
+    left: 95px;
+    height: 50px;
+    animation-delay: 0.7s;
+  }
+
+  .legs-slime-3 {
+    bottom: 20px;
+    right: 95px;
+    height: 45px;
+    animation-delay: 1.4s;
+  }
+
+  .legs-slime-4 {
+    bottom: 30px;
+    right: 25px;
+    height: 35px;
+    animation-delay: 0.3s;
+  }
+
+  @keyframes legs-drip {
+    0% { transform: scaleY(0.3); opacity: 0; }
+    50% { transform: scaleY(1); opacity: 1; }
+    100% { transform: scaleY(1.2) translateY(20px); opacity: 0; }
+  }
+
+  /* Slime puddle at bottom */
+  .legs-puddle {
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 25px;
+    background: radial-gradient(ellipse at center, rgba(57, 255, 20, 0.5) 0%, rgba(138, 43, 226, 0.3) 50%, transparent 70%);
+    border-radius: 50%;
+    animation: legs-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes legs-pulse {
+    0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.7; }
+    50% { transform: translateX(-50%) scale(1.1); opacity: 1; }
+  }
+
+  /* Goo veins on tentacles */
+  .legs-vein {
+    position: absolute;
+    width: 3px;
+    height: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(180deg,
+      transparent 0%,
+      rgba(57, 255, 20, 0.4) 20%,
+      rgba(138, 43, 226, 0.5) 50%,
+      rgba(57, 255, 20, 0.4) 80%,
+      transparent 100%);
+    border-radius: 2px;
+    animation: legs-vein-pulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes legs-vein-pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+
+  /* Bioluminescent spots */
+  .legs-glow {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: radial-gradient(circle, #39ff14 0%, rgba(57, 255, 20, 0) 70%);
+    border-radius: 50%;
+    animation: legs-blink 2s ease-in-out infinite;
+  }
+
+  .legs-glow-1 { top: 45px; left: 15px; animation-delay: 0s; }
+  .legs-glow-2 { top: 80px; left: 60px; animation-delay: 0.5s; }
+  .legs-glow-3 { top: 100px; right: 60px; animation-delay: 1s; }
+  .legs-glow-4 { top: 130px; right: 15px; animation-delay: 1.5s; }
+  .legs-glow-5 { top: 70px; left: 130px; animation-delay: 0.3s; }
+  .legs-glow-6 { top: 110px; right: 130px; animation-delay: 0.8s; }
+
+  @keyframes legs-blink {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.5); }
+  }
+
+  /* Tentacle tips */
+  .legs-tip {
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 25px;
+    height: 20px;
+    background: radial-gradient(ellipse at top, #5a3d6a 0%, #3d2847 100%);
+    border-radius: 50% 50% 60% 60%;
+    box-shadow: 0 5px 10px rgba(57, 255, 20, 0.3);
+  }
+
+  .legs-tip::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px;
+    height: 8px;
+    background: radial-gradient(ellipse, #39ff14 0%, #2d8f0f 100%);
+    border-radius: 50%;
+    opacity: 0.8;
+  }
+
+  /* Extra small tentacle appendages */
+  .legs-small-tentacle {
+    position: absolute;
+    width: 12px;
+    height: 60px;
+    background: linear-gradient(90deg, #3d2847 0%, #5a3d6a 50%, #3d2847 100%);
+    border-radius: 10px;
+    transform-origin: top center;
+  }
+
+  .legs-small-1 {
+    top: 25px;
+    left: 55px;
+    transform: rotate(-40deg);
+    animation: legs-wiggle 1.5s ease-in-out infinite;
+  }
+
+  .legs-small-2 {
+    top: 25px;
+    right: 55px;
+    transform: rotate(40deg);
+    animation: legs-wiggle 1.5s ease-in-out infinite reverse;
+  }
+
+  @keyframes legs-wiggle {
+    0%, 100% { transform: rotate(-40deg); }
+    50% { transform: rotate(-35deg); }
+  }
+</style>
+
+<div id="part-legs">
+  <!-- Hip connection -->
+  <div class="legs-hip"></div>
+
+  <!-- Main tentacle legs -->
+  <div class="legs-tentacle legs-tentacle-1">
+    <div class="legs-vein"></div>
+    <div class="legs-sucker legs-sucker-1"></div>
+    <div class="legs-sucker legs-sucker-2"></div>
+    <div class="legs-sucker legs-sucker-3"></div>
+    <div class="legs-sucker legs-sucker-4"></div>
+    <div class="legs-tip"></div>
+  </div>
+
+  <div class="legs-tentacle legs-tentacle-2">
+    <div class="legs-vein"></div>
+    <div class="legs-sucker legs-sucker-1"></div>
+    <div class="legs-sucker legs-sucker-2"></div>
+    <div class="legs-sucker legs-sucker-3"></div>
+    <div class="legs-sucker legs-sucker-4"></div>
+    <div class="legs-sucker legs-sucker-5"></div>
+    <div class="legs-tip"></div>
+  </div>
+
+  <div class="legs-tentacle legs-tentacle-3">
+    <div class="legs-vein"></div>
+    <div class="legs-sucker legs-sucker-1"></div>
+    <div class="legs-sucker legs-sucker-2"></div>
+    <div class="legs-sucker legs-sucker-3"></div>
+    <div class="legs-sucker legs-sucker-4"></div>
+    <div class="legs-sucker legs-sucker-5"></div>
+    <div class="legs-tip"></div>
+  </div>
+
+  <div class="legs-tentacle legs-tentacle-4">
+    <div class="legs-vein"></div>
+    <div class="legs-sucker legs-sucker-1"></div>
+    <div class="legs-sucker legs-sucker-2"></div>
+    <div class="legs-sucker legs-sucker-3"></div>
+    <div class="legs-sucker legs-sucker-4"></div>
+    <div class="legs-tip"></div>
+  </div>
+
+  <!-- Small appendage tentacles -->
+  <div class="legs-small-tentacle legs-small-1"></div>
+  <div class="legs-small-tentacle legs-small-2"></div>
+
+  <!-- Slime drips -->
+  <div class="legs-slime legs-slime-1"></div>
+  <div class="legs-slime legs-slime-2"></div>
+  <div class="legs-slime legs-slime-3"></div>
+  <div class="legs-slime legs-slime-4"></div>
+
+  <!-- Slime puddle -->
+  <div class="legs-puddle"></div>
+
+  <!-- Bioluminescent glow spots -->
+  <div class="legs-glow legs-glow-1"></div>
+  <div class="legs-glow legs-glow-2"></div>
+  <div class="legs-glow legs-glow-3"></div>
+  <div class="legs-glow legs-glow-4"></div>
+  <div class="legs-glow legs-glow-5"></div>
+  <div class="legs-glow legs-glow-6"></div>
+</div>

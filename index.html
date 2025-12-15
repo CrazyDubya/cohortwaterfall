@@ -1,0 +1,502 @@
+<style>
+  #world-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: linear-gradient(180deg,
+      #0a0a2e 0%,
+      #0d1b4a 15%,
+      #0f2557 30%,
+      #0a3d62 50%,
+      #073b4c 70%,
+      #042f3d 85%,
+      #021c26 100%);
+    overflow: hidden;
+  }
+
+  /* Disco ball light source */
+  .bg-disco-ball {
+    position: absolute;
+    top: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle at 40% 40%,
+      #ffffff 0%,
+      #e0e0e0 20%,
+      #a0a0a0 50%,
+      #606060 100%);
+    border-radius: 50%;
+    box-shadow:
+      0 0 60px rgba(255, 255, 255, 0.8),
+      0 0 120px rgba(255, 255, 255, 0.4),
+      inset -10px -10px 30px rgba(0, 0, 0, 0.3);
+    animation: bg-disco-rotate 8s linear infinite;
+  }
+
+  .bg-disco-ball::before {
+    content: '';
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    width: 80%;
+    height: 80%;
+    background:
+      repeating-linear-gradient(0deg, transparent, transparent 8px, rgba(255,255,255,0.1) 8px, rgba(255,255,255,0.1) 10px),
+      repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(255,255,255,0.1) 8px, rgba(255,255,255,0.1) 10px);
+    border-radius: 50%;
+  }
+
+  @keyframes bg-disco-rotate {
+    0%, 100% { filter: hue-rotate(0deg); }
+    50% { filter: hue-rotate(360deg); }
+  }
+
+  /* Disco light beams */
+  .bg-light-beams {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    opacity: 0.6;
+  }
+
+  .bg-beam {
+    position: absolute;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    animation: bg-beam-sweep 4s ease-in-out infinite;
+  }
+
+  .bg-beam:nth-child(1) { left: 10%; background: linear-gradient(180deg, #ff00ff, transparent 70%); animation-delay: 0s; }
+  .bg-beam:nth-child(2) { left: 25%; background: linear-gradient(180deg, #00ffff, transparent 60%); animation-delay: 0.5s; }
+  .bg-beam:nth-child(3) { left: 40%; background: linear-gradient(180deg, #ffff00, transparent 65%); animation-delay: 1s; }
+  .bg-beam:nth-child(4) { left: 55%; background: linear-gradient(180deg, #ff0080, transparent 70%); animation-delay: 1.5s; }
+  .bg-beam:nth-child(5) { left: 70%; background: linear-gradient(180deg, #00ff80, transparent 55%); animation-delay: 2s; }
+  .bg-beam:nth-child(6) { left: 85%; background: linear-gradient(180deg, #8000ff, transparent 60%); animation-delay: 2.5s; }
+
+  @keyframes bg-beam-sweep {
+    0%, 100% { transform: translateX(-20px) rotate(-5deg); opacity: 0.3; }
+    50% { transform: translateX(20px) rotate(5deg); opacity: 0.8; }
+  }
+
+  /* Disco sparkles */
+  .bg-sparkles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60%;
+    pointer-events: none;
+  }
+
+  .bg-sparkle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    animation: bg-sparkle-twinkle 2s ease-in-out infinite;
+  }
+
+  .bg-sparkle:nth-child(1) { top: 8%; left: 15%; background: #ff00ff; animation-delay: 0s; }
+  .bg-sparkle:nth-child(2) { top: 12%; left: 35%; background: #00ffff; animation-delay: 0.3s; }
+  .bg-sparkle:nth-child(3) { top: 5%; left: 55%; background: #ffff00; animation-delay: 0.6s; }
+  .bg-sparkle:nth-child(4) { top: 18%; left: 75%; background: #ff0080; animation-delay: 0.9s; }
+  .bg-sparkle:nth-child(5) { top: 22%; left: 25%; background: #00ff80; animation-delay: 1.2s; }
+  .bg-sparkle:nth-child(6) { top: 15%; left: 85%; background: #8000ff; animation-delay: 1.5s; }
+  .bg-sparkle:nth-child(7) { top: 28%; left: 45%; background: #ff4040; animation-delay: 0.2s; }
+  .bg-sparkle:nth-child(8) { top: 10%; left: 65%; background: #40ff40; animation-delay: 0.8s; }
+  .bg-sparkle:nth-child(9) { top: 35%; left: 10%; background: #4040ff; animation-delay: 1.1s; }
+  .bg-sparkle:nth-child(10) { top: 30%; left: 90%; background: #ff80ff; animation-delay: 0.4s; }
+
+  @keyframes bg-sparkle-twinkle {
+    0%, 100% { transform: scale(0.5); opacity: 0.3; box-shadow: 0 0 5px currentColor; }
+    50% { transform: scale(1.5); opacity: 1; box-shadow: 0 0 20px currentColor, 0 0 40px currentColor; }
+  }
+
+  /* Bubbles container */
+  .bg-bubbles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .bg-bubble {
+    position: absolute;
+    bottom: -100px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%,
+      rgba(255, 255, 255, 0.8),
+      rgba(255, 255, 255, 0.2) 40%,
+      rgba(100, 200, 255, 0.1) 60%,
+      transparent 70%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    animation: bg-bubble-rise linear infinite;
+  }
+
+  .bg-bubble:nth-child(1) { left: 5%; width: 20px; height: 20px; animation-duration: 12s; animation-delay: 0s; }
+  .bg-bubble:nth-child(2) { left: 15%; width: 35px; height: 35px; animation-duration: 15s; animation-delay: 2s; }
+  .bg-bubble:nth-child(3) { left: 25%; width: 15px; height: 15px; animation-duration: 10s; animation-delay: 1s; }
+  .bg-bubble:nth-child(4) { left: 35%; width: 25px; height: 25px; animation-duration: 14s; animation-delay: 3s; }
+  .bg-bubble:nth-child(5) { left: 45%; width: 40px; height: 40px; animation-duration: 18s; animation-delay: 0.5s; }
+  .bg-bubble:nth-child(6) { left: 55%; width: 18px; height: 18px; animation-duration: 11s; animation-delay: 4s; }
+  .bg-bubble:nth-child(7) { left: 65%; width: 30px; height: 30px; animation-duration: 16s; animation-delay: 2.5s; }
+  .bg-bubble:nth-child(8) { left: 75%; width: 22px; height: 22px; animation-duration: 13s; animation-delay: 1.5s; }
+  .bg-bubble:nth-child(9) { left: 85%; width: 28px; height: 28px; animation-duration: 17s; animation-delay: 3.5s; }
+  .bg-bubble:nth-child(10) { left: 95%; width: 16px; height: 16px; animation-duration: 12s; animation-delay: 0.8s; }
+  .bg-bubble:nth-child(11) { left: 10%; width: 12px; height: 12px; animation-duration: 9s; animation-delay: 5s; }
+  .bg-bubble:nth-child(12) { left: 50%; width: 45px; height: 45px; animation-duration: 20s; animation-delay: 6s; }
+
+  @keyframes bg-bubble-rise {
+    0% { bottom: -100px; transform: translateX(0) scale(1); opacity: 0.7; }
+    25% { transform: translateX(15px) scale(1.05); }
+    50% { transform: translateX(-15px) scale(0.95); }
+    75% { transform: translateX(10px) scale(1.02); }
+    100% { bottom: 110%; transform: translateX(-5px) scale(1); opacity: 0; }
+  }
+
+  /* Neon coral reef */
+  .bg-coral-reef {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 250px;
+  }
+
+  .bg-coral {
+    position: absolute;
+    bottom: 0;
+  }
+
+  /* Coral type 1 - branching */
+  .bg-coral-1 {
+    left: 5%;
+    width: 80px;
+    height: 120px;
+    background: linear-gradient(0deg, #ff00ff 0%, #ff66ff 100%);
+    clip-path: polygon(40% 100%, 60% 100%, 55% 70%, 70% 60%, 65% 50%, 80% 40%, 70% 35%, 75% 20%, 60% 25%, 50% 0%, 40% 25%, 25% 20%, 30% 35%, 20% 40%, 35% 50%, 30% 60%, 45% 70%);
+    filter: drop-shadow(0 0 15px #ff00ff);
+    animation: bg-coral-glow 3s ease-in-out infinite;
+  }
+
+  .bg-coral-2 {
+    left: 20%;
+    width: 60px;
+    height: 90px;
+    background: linear-gradient(0deg, #00ffff 0%, #66ffff 100%);
+    clip-path: polygon(30% 100%, 70% 100%, 65% 80%, 75% 60%, 60% 50%, 70% 30%, 50% 20%, 55% 0%, 45% 0%, 50% 20%, 30% 30%, 40% 50%, 25% 60%, 35% 80%);
+    filter: drop-shadow(0 0 15px #00ffff);
+    animation: bg-coral-glow 3s ease-in-out infinite 0.5s;
+  }
+
+  .bg-coral-3 {
+    left: 35%;
+    width: 100px;
+    height: 80px;
+    background: linear-gradient(0deg, #ffff00 0%, #ffff66 100%);
+    clip-path: polygon(20% 100%, 80% 100%, 85% 80%, 90% 50%, 80% 40%, 85% 20%, 70% 30%, 60% 10%, 50% 25%, 40% 10%, 30% 30%, 15% 20%, 20% 40%, 10% 50%, 15% 80%);
+    filter: drop-shadow(0 0 15px #ffff00);
+    animation: bg-coral-glow 3s ease-in-out infinite 1s;
+  }
+
+  .bg-coral-4 {
+    left: 55%;
+    width: 70px;
+    height: 140px;
+    background: linear-gradient(0deg, #ff0080 0%, #ff66b2 100%);
+    clip-path: polygon(35% 100%, 65% 100%, 60% 85%, 70% 70%, 65% 55%, 75% 40%, 60% 35%, 65% 20%, 55% 15%, 50% 0%, 45% 15%, 35% 20%, 40% 35%, 25% 40%, 35% 55%, 30% 70%, 40% 85%);
+    filter: drop-shadow(0 0 15px #ff0080);
+    animation: bg-coral-glow 3s ease-in-out infinite 1.5s;
+  }
+
+  .bg-coral-5 {
+    left: 72%;
+    width: 90px;
+    height: 100px;
+    background: linear-gradient(0deg, #00ff80 0%, #66ffb2 100%);
+    clip-path: polygon(25% 100%, 75% 100%, 80% 75%, 90% 55%, 75% 45%, 85% 25%, 65% 20%, 70% 5%, 50% 15%, 30% 5%, 35% 20%, 15% 25%, 25% 45%, 10% 55%, 20% 75%);
+    filter: drop-shadow(0 0 15px #00ff80);
+    animation: bg-coral-glow 3s ease-in-out infinite 2s;
+  }
+
+  .bg-coral-6 {
+    left: 88%;
+    width: 65px;
+    height: 110px;
+    background: linear-gradient(0deg, #8000ff 0%, #b366ff 100%);
+    clip-path: polygon(40% 100%, 60% 100%, 55% 75%, 70% 55%, 60% 45%, 75% 25%, 55% 20%, 50% 0%, 45% 20%, 25% 25%, 40% 45%, 30% 55%, 45% 75%);
+    filter: drop-shadow(0 0 15px #8000ff);
+    animation: bg-coral-glow 3s ease-in-out infinite 2.5s;
+  }
+
+  /* Sea anemone style corals */
+  .bg-anemone {
+    position: absolute;
+    bottom: 0;
+    border-radius: 50% 50% 0 0;
+  }
+
+  .bg-anemone-1 {
+    left: 12%;
+    width: 50px;
+    height: 60px;
+    background: radial-gradient(ellipse at bottom, #ff4080 0%, transparent 70%);
+    box-shadow:
+      -15px -20px 0 -10px #ff4080,
+      15px -20px 0 -10px #ff4080,
+      -25px -10px 0 -10px #ff4080,
+      25px -10px 0 -10px #ff4080,
+      0px -30px 0 -10px #ff4080,
+      -10px -35px 0 -12px #ff4080,
+      10px -35px 0 -12px #ff4080;
+    filter: drop-shadow(0 0 10px #ff4080);
+    animation: bg-anemone-sway 4s ease-in-out infinite;
+  }
+
+  .bg-anemone-2 {
+    left: 45%;
+    width: 40px;
+    height: 50px;
+    background: radial-gradient(ellipse at bottom, #40ffff 0%, transparent 70%);
+    box-shadow:
+      -12px -15px 0 -8px #40ffff,
+      12px -15px 0 -8px #40ffff,
+      -20px -8px 0 -8px #40ffff,
+      20px -8px 0 -8px #40ffff,
+      0px -25px 0 -8px #40ffff;
+    filter: drop-shadow(0 0 10px #40ffff);
+    animation: bg-anemone-sway 4s ease-in-out infinite 1s;
+  }
+
+  .bg-anemone-3 {
+    left: 80%;
+    width: 45px;
+    height: 55px;
+    background: radial-gradient(ellipse at bottom, #ffff40 0%, transparent 70%);
+    box-shadow:
+      -14px -18px 0 -9px #ffff40,
+      14px -18px 0 -9px #ffff40,
+      -22px -9px 0 -9px #ffff40,
+      22px -9px 0 -9px #ffff40,
+      0px -28px 0 -9px #ffff40;
+    filter: drop-shadow(0 0 10px #ffff40);
+    animation: bg-anemone-sway 4s ease-in-out infinite 2s;
+  }
+
+  @keyframes bg-coral-glow {
+    0%, 100% { filter: drop-shadow(0 0 15px currentColor) brightness(1); }
+    50% { filter: drop-shadow(0 0 30px currentColor) brightness(1.3); }
+  }
+
+  @keyframes bg-anemone-sway {
+    0%, 100% { transform: skewX(-3deg); }
+    50% { transform: skewX(3deg); }
+  }
+
+  /* Sandy ocean floor */
+  .bg-ocean-floor {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    background: linear-gradient(0deg,
+      #1a3a4a 0%,
+      #0d2a3a 50%,
+      transparent 100%);
+    border-radius: 100% 100% 0 0 / 20px 20px 0 0;
+  }
+
+  .bg-ocean-floor::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    background: repeating-linear-gradient(90deg,
+      transparent 0px,
+      rgba(255, 255, 255, 0.03) 2px,
+      transparent 4px,
+      transparent 20px
+    );
+  }
+
+  /* Floating particles / plankton */
+  .bg-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .bg-particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    animation: bg-particle-float 20s linear infinite;
+  }
+
+  .bg-particle:nth-child(1) { left: 8%; top: 20%; animation-delay: 0s; animation-duration: 25s; }
+  .bg-particle:nth-child(2) { left: 18%; top: 40%; animation-delay: 3s; animation-duration: 22s; }
+  .bg-particle:nth-child(3) { left: 28%; top: 60%; animation-delay: 6s; animation-duration: 28s; }
+  .bg-particle:nth-child(4) { left: 38%; top: 30%; animation-delay: 9s; animation-duration: 24s; }
+  .bg-particle:nth-child(5) { left: 48%; top: 50%; animation-delay: 2s; animation-duration: 26s; }
+  .bg-particle:nth-child(6) { left: 58%; top: 70%; animation-delay: 5s; animation-duration: 23s; }
+  .bg-particle:nth-child(7) { left: 68%; top: 25%; animation-delay: 8s; animation-duration: 27s; }
+  .bg-particle:nth-child(8) { left: 78%; top: 45%; animation-delay: 1s; animation-duration: 21s; }
+  .bg-particle:nth-child(9) { left: 88%; top: 65%; animation-delay: 4s; animation-duration: 29s; }
+  .bg-particle:nth-child(10) { left: 98%; top: 35%; animation-delay: 7s; animation-duration: 20s; }
+
+  @keyframes bg-particle-float {
+    0% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+    25% { transform: translate(-30px, -50px) scale(1.2); opacity: 0.6; }
+    50% { transform: translate(20px, -100px) scale(0.8); opacity: 0.3; }
+    75% { transform: translate(-20px, -150px) scale(1.1); opacity: 0.5; }
+    100% { transform: translate(0, -200px) scale(1); opacity: 0.4; }
+  }
+
+  /* Light rays from surface */
+  .bg-light-rays {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+      linear-gradient(175deg, rgba(255,255,255,0.1) 0%, transparent 40%),
+      linear-gradient(170deg, rgba(100,200,255,0.05) 0%, transparent 50%),
+      linear-gradient(165deg, rgba(255,255,255,0.08) 0%, transparent 35%);
+    pointer-events: none;
+    animation: bg-rays-shimmer 8s ease-in-out infinite;
+  }
+
+  @keyframes bg-rays-shimmer {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+
+  /* Seaweed */
+  .bg-seaweed {
+    position: absolute;
+    bottom: 20px;
+    width: 15px;
+    background: linear-gradient(0deg, #006644, #00aa66);
+    border-radius: 50% 50% 0 0;
+    transform-origin: bottom center;
+    animation: bg-seaweed-sway 5s ease-in-out infinite;
+  }
+
+  .bg-seaweed-1 { left: 3%; height: 80px; animation-delay: 0s; }
+  .bg-seaweed-2 { left: 6%; height: 100px; animation-delay: 0.5s; }
+  .bg-seaweed-3 { left: 30%; height: 70px; animation-delay: 1s; }
+  .bg-seaweed-4 { left: 62%; height: 90px; animation-delay: 1.5s; }
+  .bg-seaweed-5 { left: 92%; height: 85px; animation-delay: 2s; }
+  .bg-seaweed-6 { left: 95%; height: 110px; animation-delay: 2.5s; }
+
+  @keyframes bg-seaweed-sway {
+    0%, 100% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+  }
+</style>
+
+<div id="world-bg">
+  <!-- Disco ball at top -->
+  <div class="bg-disco-ball"></div>
+
+  <!-- Light beams from disco ball -->
+  <div class="bg-light-beams">
+    <div class="bg-beam"></div>
+    <div class="bg-beam"></div>
+    <div class="bg-beam"></div>
+    <div class="bg-beam"></div>
+    <div class="bg-beam"></div>
+    <div class="bg-beam"></div>
+  </div>
+
+  <!-- Sparkles -->
+  <div class="bg-sparkles">
+    <div class="bg-sparkle"></div>
+    <div class="bg-sparkle"></div>
+    <div class="bg-sparkle"></div>
+    <div class="bg-sparkle"></div>
+    <div class="bg-sparkle"></div>
+    <div class="bg-sparkle"></div>
+    <div class="bg-sparkle"></div>
+    <div class="bg-sparkle"></div>
+    <div class="bg-sparkle"></div>
+    <div class="bg-sparkle"></div>
+  </div>
+
+  <!-- Light rays from surface -->
+  <div class="bg-light-rays"></div>
+
+  <!-- Floating particles -->
+  <div class="bg-particles">
+    <div class="bg-particle"></div>
+    <div class="bg-particle"></div>
+    <div class="bg-particle"></div>
+    <div class="bg-particle"></div>
+    <div class="bg-particle"></div>
+    <div class="bg-particle"></div>
+    <div class="bg-particle"></div>
+    <div class="bg-particle"></div>
+    <div class="bg-particle"></div>
+    <div class="bg-particle"></div>
+  </div>
+
+  <!-- Rising bubbles -->
+  <div class="bg-bubbles">
+    <div class="bg-bubble"></div>
+    <div class="bg-bubble"></div>
+    <div class="bg-bubble"></div>
+    <div class="bg-bubble"></div>
+    <div class="bg-bubble"></div>
+    <div class="bg-bubble"></div>
+    <div class="bg-bubble"></div>
+    <div class="bg-bubble"></div>
+    <div class="bg-bubble"></div>
+    <div class="bg-bubble"></div>
+    <div class="bg-bubble"></div>
+    <div class="bg-bubble"></div>
+  </div>
+
+  <!-- Seaweed -->
+  <div class="bg-seaweed bg-seaweed-1"></div>
+  <div class="bg-seaweed bg-seaweed-2"></div>
+  <div class="bg-seaweed bg-seaweed-3"></div>
+  <div class="bg-seaweed bg-seaweed-4"></div>
+  <div class="bg-seaweed bg-seaweed-5"></div>
+  <div class="bg-seaweed bg-seaweed-6"></div>
+
+  <!-- Neon coral reef -->
+  <div class="bg-coral-reef">
+    <div class="bg-coral bg-coral-1"></div>
+    <div class="bg-coral bg-coral-2"></div>
+    <div class="bg-coral bg-coral-3"></div>
+    <div class="bg-coral bg-coral-4"></div>
+    <div class="bg-coral bg-coral-5"></div>
+    <div class="bg-coral bg-coral-6"></div>
+    <div class="bg-anemone bg-anemone-1"></div>
+    <div class="bg-anemone bg-anemone-2"></div>
+    <div class="bg-anemone bg-anemone-3"></div>
+  </div>
+
+  <!-- Ocean floor -->
+  <div class="bg-ocean-floor"></div>
+</div>
